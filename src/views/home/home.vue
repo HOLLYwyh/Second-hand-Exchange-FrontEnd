@@ -1,9 +1,9 @@
 <template>
   <div>
     <!--顶部导航-->
-    <NavBar/>
-    <!--粒子特效-->
-    <Particles/>
+<!--    <NavBar/>-->
+<!--    &lt;!&ndash;粒子特效&ndash;&gt;-->
+<!--    <Particles/>-->
     <!--返回顶部-->
     <BackToTop/>
   </div>
