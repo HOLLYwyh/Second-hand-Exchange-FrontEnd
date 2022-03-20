@@ -5,6 +5,7 @@
     </div>
     <div style="vertical-align: middle">
       <el-card  class="Login_Card" style="border-radius: 12px">
+        <div class="login-title">校园二手书交易平台</div>
         <el-row justify="center" style="margin: 30px 0 10px 0">
           <el-col>
             <el-form ref="form" :model="form" label-width="40px" :hide-required-asterisk="true" size="medium">
@@ -18,7 +19,7 @@
           </el-col>
         </el-row>
 
-        <el-row type="flex" justify="center" style="margin: 30px 0 10px 0">
+        <el-row type="flex" justify="center" style="margin: 0 0 10px 0">
           <el-button class="buttonColor" @click="login" size="medium" round style="width: 280px" type="primary">登录</el-button>
         </el-row>
 
@@ -29,7 +30,7 @@
             </router-link>
           </el-col>
           <el-col :span="12">
-            <router-link :to="'/register'">
+            <router-link :to="'/forgetPassword'">
               <el-link :underline="false" style="color: white">找回密码</el-link>
             </router-link>
           </el-col>
@@ -89,6 +90,12 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
+}
+.login-title{
+  color: whitesmoke;
+  text-align: center;
+  font-size: 24px;
+  margin-left: 30px;
 }
 </style>
 
