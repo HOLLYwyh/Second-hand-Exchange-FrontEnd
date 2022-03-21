@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div class="Img_Box">
-      <el-card class="Card" style="border-radius: 12px"></el-card>
-    </div>
     <div class="nav">
       <ul class="nav-content">
         <li class="icon iconfont" style="color: silver;margin-top: -8px"></li>
@@ -63,14 +60,6 @@ export default {
 }
 </script>
 <style type="text/css" scoped>
-.Img_Box {
-  height: fit-content;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 102%;
-  z-index: -1;
-}
 .nav{
     top: 0;
     left: 0;
@@ -79,7 +68,8 @@ export default {
     height: 75px;
     min-width: 100%;
     width: 100.2%;
-    background-image: linear-gradient(to right, gainsboro, silver);
+    background-image: linear-gradient(to right, #252F3F , #252F3F);
+
     margin-left: -4px;
     margin-right: -4px;
     z-index: 1000;
