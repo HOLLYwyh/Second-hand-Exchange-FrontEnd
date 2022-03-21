@@ -33,6 +33,11 @@ export default new Router({
           component: () => import('@/views/userHome/myOrder'),
           meta: {title: '我的订单'}},
         {
+          path: '/userHome/myChart',
+          name: 'myChart',
+          component: () => import('@/views/userHome/myChart'),
+          meta: {title: '我的购物车'}},
+        {
           path: '/userHome/mySecurity',
           name: 'mySecurity',
           component: () => import('@/views/userHome/mySecurity'),

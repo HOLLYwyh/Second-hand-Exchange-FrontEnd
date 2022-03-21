@@ -43,13 +43,15 @@ export default {
       keywords: '',
       items: [
         {
-          name: '首页'
+          name: '首页',
+          href: '#/'
         },
         {
           name: '收藏夹'
         },
         {
-          name: '购物车'
+          name: '购物车',
+          href: '#/userHome/myChart'
         },
         {
           name: '上架商品'

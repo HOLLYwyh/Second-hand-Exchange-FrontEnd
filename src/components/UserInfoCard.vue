@@ -43,7 +43,7 @@
       </el-card>
     </el-col >
     <el-col :span="8" class="card-style">
-      <el-card class="card-content">
+      <el-card class="card-content" @click.native="jumpTo('/userHome/myChart')">
         <el-row>
           <el-col :span="9">
             <img src="../assets/usrHomeIcon/giftCard.png" class="img-style" />
