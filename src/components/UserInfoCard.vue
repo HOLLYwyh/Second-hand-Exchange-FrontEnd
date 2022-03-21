@@ -1,8 +1,8 @@
 <template>
 <div>
   <el-row>
-    <el-col :span="8" class="card-style">
-      <el-card class="card-content">
+    <el-col :span="8" class="card-style" >
+      <el-card class="card-content" @click.native="jumpTo('/userHome/myOrder')">
         <el-row>
           <el-col :span="9">
             <img src="../assets/usrHomeIcon/order.png" class="img-style" />
@@ -16,7 +16,7 @@
     </el-col>
 
     <el-col :span="8" class="card-style">
-      <el-card class="card-content">
+      <el-card class="card-content" @click.native="jumpTo('/userHome/mySecurity')">
         <el-row>
           <el-col :span="9">
             <img src="../assets/usrHomeIcon/security_1.png" class="img-style" />
@@ -64,7 +64,8 @@ export default {
   name: 'UserInfoCard',
   methods: {
     jumpTo (path) {
-      this.router.push({path: path})
+      // console.log(path)
+      this.$router.push({path: path})
     }
   }
 }

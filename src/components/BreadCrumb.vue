@@ -1,9 +1,13 @@
 <template>
   <div>
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item v-for="(item,index) in breadList" :key="index" :to="item.path">{{item.title}}</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div >
+      <el-breadcrumb separator-class="el-icon-arrow-right" class="margin-style">
+        <el-breadcrumb-item style="font-size: medium" :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item style="font-size: medium" v-for="(item,index) in breadList" :key="index" :to="item.path">{{item.meta.title}}</el-breadcrumb-item>
+      </el-breadcrumb>
+      <el-divider></el-divider>
+
+    </div>
   </div>
 </template>
 
@@ -21,14 +25,17 @@ export default {
     },
     getBreadcrumb () {
       let matched = this.$route.matched
-      // 如果不是首页
-      if (!this.isHome(matched[0])) {
-        matched = [{ path: '/home', meta: { title: '首页' } }].concat(matched)
-      }
+
       this.breadList = matched
+      console.log(this.breadList)
     }
   },
-  created () {
+  watch: {
+    $route () {
+      this.getBreadcrumb()
+    }
+  },
+  mounted () {
     this.getBreadcrumb()
   }
 }
