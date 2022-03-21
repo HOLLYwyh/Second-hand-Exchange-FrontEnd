@@ -24,7 +24,14 @@ export default new Router({
     }, {
       path: '/userHome',
       name: 'userHome',
-      component: () => import('@/views/userHome/userHome')
+      component: () => import('@/views/userHome/userHome')}, {
+      path: '/search',
+      name: 'Search',
+      component: () => import('@/views/search/search')
+    }, {
+      path: '/searchResult',
+      name: 'SearchResult',
+      component: () => import('@/views/search/searchResult')
     }
   ]
 })
