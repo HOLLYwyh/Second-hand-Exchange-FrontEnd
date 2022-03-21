@@ -65,6 +65,7 @@ export default {
   data () {
     return {
       swiperList: swiperList,
+      // TODO:和后端协同交流之后再确定具体细节，此为临时Demo
       goodsList: [
         {name: '课本', bookList: [{img: require('@/assets/temp/temp1.jpg'), name: '算法导论', introduction: ''}, {img: require('@/assets/temp/temp2.jpg'), name: '操作系统概念', introduction: ''}, {img: require('@/assets/temp/temp3.jpg'), name: '计算机网络', introduction: ''}, {img: require('@/assets/temp/temp4.jpg'), name: '离散数学', introduction: ''}]},
         {name: '教辅资料', bookList: [{img: '', name: '计算机网络实验教程', introduction: ''}, {img: '', name: '王道考验', introduction: ''}, {img: '', name: '高数学解', introduction: ''}, {img: '', name: '物理实验辅导', introduction: ''}]},
