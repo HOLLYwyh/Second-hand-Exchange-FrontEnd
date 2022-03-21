@@ -2,9 +2,10 @@
   <div>
     <!--顶部导航-->
     <NavBar/>
+    <Particles/>
     <!--轮播图-->
     <div>
-      <el-carousel :interval="4000" :height="carouselHeight" type="card" style="width: 100.8%;margin-left: -8px;margin-right: -9px;top: 40px">
+      <el-carousel :interval="4000" :height="carouselHeight" type="card" style="width: 100.8%;margin-left: -8px;margin-right: -9px;top: 40px;z-index: 1000">
         <el-carousel-item v-for="(item, index) in swiperList" :key="index">
           <img :src="item.picImg"/>
         </el-carousel-item>
