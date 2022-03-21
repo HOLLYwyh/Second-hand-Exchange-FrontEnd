@@ -8,6 +8,7 @@ import VueParticles from 'vue-particles'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'font-awesome/css/font-awesome.min.css'
 
+import './assets/style/myStyle.css'
 Vue.use(ElementUI)
 Vue.use(VueParticles)
 

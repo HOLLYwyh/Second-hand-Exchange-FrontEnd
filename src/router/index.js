@@ -24,11 +24,33 @@ export default new Router({
     }, {
       path: '/userHome',
       name: 'userHome',
-      component: () => import('@/views/userHome/userHome')}, {
-      path: '/myOrder',
-      name: 'myOrder',
-      component: () => import('@/views/userHome/myOrder')
-    }, {
+      component: () => import('@/views/userHome/userHome'),
+      meta: {title: '用户中心'},
+      children: [
+        {
+          path: '/userHome/myOrder',
+          name: 'myOrder',
+          component: () => import('@/views/userHome/myOrder'),
+          meta: {title: '我的订单'}},
+        {
+          path: '/userHome/mySecurity',
+          name: 'mySecurity',
+          component: () => import('@/views/userHome/mySecurity'),
+          meta: {title: '登录和安全'},
+          children: [{
+            path: '/userHome/mySecurity/resetMyPhone',
+            name: 'resetMyPhone',
+            component: () => import('@/views/userHome/resetMyPhone'),
+            meta: {title: '重置手机号'}
+          },
+          {
+            path: '/userHome/mySecurity/resetMyPassword',
+            name: 'resetMyPassword',
+            component: () => import('@/views/userHome/resetMyPassword'),
+            meta: {title: '重置密码'}
+          }]
+        }
+      ]}, {
       path: '/search',
       name: 'Search',
       component: () => import('@/views/search/search')
