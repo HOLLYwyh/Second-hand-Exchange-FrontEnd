@@ -30,12 +30,12 @@
           </div>
         </div>
         <div style="margin-top: 20px;display: flex;justify-content: center">
-          <el-button class="fa fa-solid fa-cart-shopping" type="success"></el-button>
+          <el-button type="success">加入购物车</el-button>
           <el-button type="primary">立即购买</el-button>
         </div>
         <!--商品信息-->
         <div class="album-tabs-wrap">
-          <el-tabs>
+          <el-tabs style="z-index: 1000;">
             <el-tab-pane label="信息列表">
               <div class="table">
                 <el-table :data="detailInfo" infinite-scroll-delay=500 infinite-scroll-disabled="noMore" stripe>
@@ -54,10 +54,11 @@
 
 <script>
 import NavBar from '../../components/NavBar'
+import Particles from '../../components/Particles'
 
 export default {
   name: 'bookDetail',
-  components: {NavBar},
+  components: {NavBar, Particles},
   data () {
     return {
       // TODO:此处可能需要再次修改
@@ -93,25 +94,30 @@ export default {
   max-width: 1300px;
   margin: 0 auto;
   padding: 20px;
+  z-index: 1000;
 }
 
 .book-top-card {
   display: flex;
+  z-index: 1000;
 }
 
 .book-img-wrap {
   width: 200px;
   height: 200px;
+  z-index: 1000;
 }
 
 .book-img-wrap img {
   width: 100%;
   height: 100%;
+  z-index: 1000;
 }
 
 .book-info {
   padding: 0 20px;
   flex: 1;
+  z-index: 1000;
 }
 
 .book-info .tag1 {
@@ -123,6 +129,7 @@ export default {
   border-radius: 5px;
   padding: 0 7px;
   cursor: default;
+  z-index: 1000;
 }
 
 .book-name {
@@ -130,22 +137,27 @@ export default {
   font-weight: 600;
   display: flex;
   align-items: center;
+  z-index: 1000;
 }
 
 .book-user-info {
   display: flex;
   align-items: center;
   font-size: 14px;
+  z-index: 1000;
 }
 .book-desc span:nth-of-type(2){
   /*font-size: 14px;*/
+  z-index: 1000;
 }
 
 .album-tabs-wrap {
   margin-top: 20px;
+  z-index: 1000;
 }
 
 .el-table td, .el-table th.is-leaf {
   border-bottom: none;
+  z-index: 1000;
 }
 </style>
