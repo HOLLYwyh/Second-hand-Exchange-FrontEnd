@@ -27,7 +27,7 @@ export default {
       let matched = this.$route.matched
 
       this.breadList = matched
-      console.log(this.breadList)
+      // console.log(this.breadList)
     }
   },
   watch: {

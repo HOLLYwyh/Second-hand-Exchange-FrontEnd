@@ -30,7 +30,7 @@
     </el-col>
 
     <el-col :span="8" class="card-style">
-      <el-card class="card-content">
+      <el-card class="card-content" @click.native="jumpTo('/userHome/myAddress')">
         <el-row>
           <el-col :span="9">
             <img src="../assets/usrHomeIcon/address.png" class="img-style" />

@@ -35,8 +35,16 @@ export default new Router({
         {
           path: '/userHome/myChart',
           name: 'myChart',
-          component: () => import('@/views/userHome/myChart'),
-          meta: {title: '我的购物车'}},
+          component: () => import('@/views/userHome/myCart'),
+          meta: {title: '我的购物车'},
+          children: [
+            {
+              path: '/createOrder',
+              name: 'createOrder',
+              component: () => import('@/views/payment/createOrder'),
+              meta: {title: '创建订单'}
+            }
+          ]},
         {
           path: '/userHome/mySecurity',
           name: 'mySecurity',
@@ -54,6 +62,12 @@ export default new Router({
             component: () => import('@/views/userHome/resetMyPassword'),
             meta: {title: '重置密码'}
           }]
+        },
+        {
+          path: '/userHome/myAddress',
+          name: 'myAddress',
+          component: () => import('@/views/userHome/myAddress'),
+          meta: {title: '我的地址'}
         }
       ]}, {
       path: '/search',

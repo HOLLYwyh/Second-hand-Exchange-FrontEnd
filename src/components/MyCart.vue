@@ -161,14 +161,12 @@ export default {
       }
     },
     submitCart () {
-      console.log(this.multipleSelection)
+      this.$emit('createOrder', this.multipleSelection)
     }
   }
 }
 </script>
 
 <style scoped>
-.shopImg {
-  width: 100%;
-}
+
 </style>
