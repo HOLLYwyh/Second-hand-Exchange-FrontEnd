@@ -1,26 +1,21 @@
 <template>
-  <div>
+  <div class="margin-style" style="margin-left:100px;margin-right: 100px">
     <bread-crumb></bread-crumb>
-    <div class="margin-style">
-      <h3 style="float: left">我的购物车</h3>
-    </div>
-    <el-container>
-      <el-main></el-main>
-      <el-aside></el-aside>
-    </el-container>
+    <my-cart></my-cart>
   </div>
 </template>
 
 <script>
 import BreadCrumb from '../../components/BreadCrumb'
+import MyCart from '../../components/MyCart'
 export default {
   name: 'myChart',
   components: {
-    BreadCrumb
+    BreadCrumb,
+    MyCart
   }
 }
 </script>
 
 <style scoped>
-
 </style>
