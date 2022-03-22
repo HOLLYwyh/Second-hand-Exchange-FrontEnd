@@ -4,8 +4,6 @@
       <el-select  @change="getCities" v-model="currentProvince" :disabled="disabled || provinceDisabled" class="province">
         <el-option v-for="(item, index) in provinces"  :value="item" :key="index" :label="item"></el-option>
       </el-select>
-
-
       <template v-if="!onlyProvince">
         <el-select @change="getAreas" v-model="currentCity" :disabled="disabled || cityDisabled" class="city">
           <el-option :value="placeholders.city">{{ placeholders.city }}</el-option>
@@ -192,14 +190,14 @@ export default {
       }
     },
     getCodeByArea (value) {
-      let areas_map = {}
-	    let arr_keys = Object.keys(this.areas)
-      for (let i = 0; i < arr_keys.length; i++) {
-        let arr_key = arr_keys[i]
-        let arr_value = this.areas[arr_key]
-        areas_map[arr_value] = arr_key
+      let areasMap = {}
+      let arrKeys = Object.keys(this.areas)
+      for (let i = 0; i < arrKeys.length; i++) {
+        let arrKey = arrKeys[i]
+        let arrValue = this.areas[arrKey]
+        areasMap[arrValue] = arrKey
       }
-      return areas_map[value]
+      return areasMap[value]
     },
     emit (name) {
       let data = {
@@ -265,7 +263,7 @@ export default {
       this.getAreas()
     },
     chooseArea (name) {
-	    this.currentArea = name
+      this.currentArea = name
     },
     getAreaCodeByPreCode (name, preCode) {
       let codes = []
@@ -281,7 +279,7 @@ export default {
       if (codes.length > 1) {
         let index
         codes.forEach((item, i) => {
-          if (preCode.length === 2 && item.slice(0, 2) === preCode || preCode.length === 4 && item.slice(0, 4) !== preCode) {
+          if ((preCode.length === 2 && item.slice(0, 2) === preCode) || (preCode.length === 4 && item.slice(0, 4) !== preCode)) {
             index = i
           }
         })
@@ -354,4 +352,3 @@ export default {
   }
 }
 </script>
-

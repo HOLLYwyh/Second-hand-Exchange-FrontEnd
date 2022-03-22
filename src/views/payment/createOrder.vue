@@ -148,7 +148,7 @@ export default {
       ]
     }
   },
-  methods:{
+  methods: {
     jumpTo (path) {
       // console.log(path)
       this.$router.replace({path: path})
