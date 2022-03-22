@@ -77,6 +77,17 @@
           </el-table>
         </div>
       <br />
+      <div>
+        <el-radio v-model="radio" label="1">
+          <img src="../../assets/paymentIcon/zhifubao.png" width="30px"/>
+          支付宝支付
+        </el-radio>
+        <el-radio v-model="radio" label="2">
+          <img src="../../assets/paymentIcon/wechat.png" width="30px"/>
+          微信支付
+        </el-radio>
+      </div>
+      <br />
       <el-button type="primary" @click="jumpTo('/userHome/myOrder')"> 结 算 </el-button>
 
       </div>
@@ -94,47 +105,16 @@ export default {
   },
   data () {
     return {
+      radio: 0,
       items: [
         {
           title: 123,
-          shopImg: 'https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1606288963.72951431.jpg',
-          shop: 'jhdjkahdkjahdkadk',
-          price: 123,
-          number: 12,
-          goodTotal: 0
+          shopImg: 'http://t14.baidu.com/it/u=2189611985,885650841&fm=224&app=112&f=JPEG?w=500&h=500',
+          shop: '高等数学蓝皮书 第三版 九成新',
+          price: 12,
+          number: 1,
+          goodTotal: 12
         },
-        {
-          title: 123,
-          shopImg: 'https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1606288963.72951431.jpg',
-          shop: 'jhdjkahdkjahdkadk',
-          price: 123,
-          number: 12,
-          goodTotal: 0
-        },
-        {
-          title: 123,
-          shopImg: 'https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1606288963.72951431.jpg',
-          shop: 'jhdjkahdkjahdkadk',
-          price: 123,
-          number: 12,
-          goodTotal: 0
-        },
-        {
-          title: 123,
-          shopImg: 'https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1606288963.72951431.jpg',
-          shop: 'jhdjkahdkjahdkadk',
-          price: 123,
-          number: 12,
-          goodTotal: 0
-        },
-        {
-          title: 123,
-          shopImg: 'https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1606288963.72951431.jpg',
-          shop: 'jhdjkahdkjahdkadk',
-          price: 123,
-          number: 12,
-          goodTotal: 0
-        }
       ],
       addresses: [
         {

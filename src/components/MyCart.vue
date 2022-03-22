@@ -39,6 +39,7 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-divider>总价 : {{totalPrice}}</el-divider>
     <div style="margin-top: 30px">
       <el-button @click="submitCart" type="primary">结算</el-button>
     </div>
@@ -50,48 +51,41 @@ export default {
   name: 'MyCart',
   data () {
     return {
+      totalPrice: 0,
       checkItem: [],
       items: [
         {
-          title: 123,
-          shopImg: 'https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1606288963.72951431.jpg',
-          shop: 'jhdjkahdkjahdkadk',
-          price: 123,
-          number: 12,
+          title: '高等数学',
+          shopImg: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.alicdn.com%2Ftfscom%2Fi2%2F101450072%2FTB1IDr_jh6I8KJjSszfXXaZVXXa_%21%210-item_pic.jpg&refer=http%3A%2F%2Fimg.alicdn.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1650539900&t=16fbfd5812c8999650ab61900747d799',
+          shop: '高等数学同济第五版 九成新',
+          price: 20,
+          number: 1,
           goodTotal: 0
         },
         {
           title: 123,
-          shopImg: 'https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1606288963.72951431.jpg',
-          shop: 'jhdjkahdkjahdkadk',
-          price: 123,
-          number: 12,
+          shopImg: 'http://t14.baidu.com/it/u=3602436358,144379417&fm=224&app=112&f=JPEG?w=500&h=500&s=5A10EE03404472E846220C520300C0E2',
+          shop: '高等数学高职专用版',
+          price: 14,
+          number: 1,
           goodTotal: 0
         },
         {
           title: 123,
-          shopImg: 'https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1606288963.72951431.jpg',
-          shop: 'jhdjkahdkjahdkadk',
-          price: 123,
-          number: 12,
+          shopImg: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.beifabook.com%2FBook%2FB%2F7802%2F43%2FB780243980.gif&refer=http%3A%2F%2Fpic.beifabook.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1650539900&t=1216d1e1c14ef9b13246f6fe6a54df63',
+          shop: '高等数学 绿皮书 十三五规划专用书',
+          price: 18,
+          number: 2,
           goodTotal: 0
         },
         {
           title: 123,
-          shopImg: 'https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1606288963.72951431.jpg',
-          shop: 'jhdjkahdkjahdkadk',
-          price: 123,
-          number: 12,
+          shopImg: 'http://t14.baidu.com/it/u=2189611985,885650841&fm=224&app=112&f=JPEG?w=500&h=500',
+          shop: '高等数学 综合教育版本 第七版',
+          price: 12,
+          number: 1,
           goodTotal: 0
         },
-        {
-          title: 123,
-          shopImg: 'https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1606288963.72951431.jpg',
-          shop: 'jhdjkahdkjahdkadk',
-          price: 123,
-          number: 12,
-          goodTotal: 0
-        }
       ],
       multipleSelection: []
 

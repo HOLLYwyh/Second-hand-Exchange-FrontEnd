@@ -7,12 +7,13 @@
       <el-col :span="6" :offset="9" class="border-style">
         <br />
         <el-row class="margin-inner-style">
-          <el-col :span="24">
+          <el-col :span="10">
             <div style="float: left;font-size: x-small">
               <p><b>原手机号码</b></p>
               <p>199******63</p>
             </div>
           </el-col>
+          <el-col :span="14" style="margin-top: 30px;"><el-button size="mini" class="button-style">获 取 验 证 码</el-button></el-col>
         </el-row>
         <el-divider></el-divider>
         <el-row class="margin-inner-style">
@@ -27,6 +28,21 @@
             </div>
           </el-col>
         </el-row>
+        <el-divider></el-divider>
+
+        <el-row class="margin-inner-style">
+          <el-col :span="24">
+            <div>
+              <div >
+                <p style="float: left;font-size: x-small"><b>验证码：</b></p>
+              </div>
+              <div style="float: left">
+                <el-input></el-input>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
+
         <el-divider></el-divider>
 
         <el-row class="margin-inner-style" style="margin-right: 30px">

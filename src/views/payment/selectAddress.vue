@@ -119,23 +119,15 @@ export default {
         {
           province: '北京市',
           city: '北京市',
-          area: '东城区',
-          address: '曹安公路4800号',
+          area: '西城区',
+          address: '南翔公路4800号',
           name: '梁xy',
           phone: '18868629263'
         },
         {
-          province: '北京市',
-          city: '北京市',
-          area: '东城区',
-          address: '曹安公路4800号',
-          name: '梁xy',
-          phone: '18868629263'
-        },
-        {
-          province: '北京市',
-          city: '北京市',
-          area: '东城区',
+          province: '上海市',
+          city: '上海市',
+          area: '嘉定区',
           address: '曹安公路4800号',
           name: '梁xy',
           phone: '18868629263'

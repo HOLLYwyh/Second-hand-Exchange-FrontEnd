@@ -164,23 +164,12 @@ export default {
     return {
       activeName: 'all',
       orderList: [{
-        title: '这是一个标题标题标题标题标题标题标题标题标题标题标题标题',
+        title: '算法导论 工业出版社版本',
         status: '在途',
         createTime: '2021.2.14',
         totalPrice: '$20'
-      },
-      {
-        title: '这是一个标题标题标题标题标题标题标题标题标题标题标题标题',
-        status: '在途',
-        createTime: '2021.2.14',
-        totalPrice: '$20'
-      },
-      {
-        title: '这是一个标题标题标题标题标题标题标题标题标题标题标题标题',
-        status: '在途',
-        createTime: '2021.2.14',
-        totalPrice: '$20'
-      }]
+      }
+      ]
     }
   },
   methods: {
