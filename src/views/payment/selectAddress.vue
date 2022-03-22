@@ -1,11 +1,14 @@
 <template>
   <div>
-    <div>
+    <div v-if="$route.path === '/createOrder'">
       <div>
         <bread-crumb></bread-crumb>
       </div>
-      <div>
+
+      <div class="margin-style">
         <el-table element-loading-text="正在为您拼命加载中..." :data="addresses" ref="multipleTable" style="width: 100%"
+                  highlight-current-row
+                  @current-change="handleCurrentChange"
                   :close-on-click-modal="false" :close-on-press-escape="false"
                   :header-cell-style="{background:'#f8f8f8',color:'#999'}">
           <el-table-column prop="province" align="center" width="150" label="省份">
@@ -38,16 +41,12 @@
               <span class="price">{{scope.row.phone}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <i class="el-icon-delete" style="font-size:18px;cursor: pointer;" @click="handleDelete(scope.$index, scope.row)"></i>
-              <i class="el-icon-edit" style="font-size:18px;cursor: pointer;" @click="eidtAddress(scope.$index, scope.row)"></i>
-            </template>
-          </el-table-column>
         </el-table>
       </div>
       <div>
         <el-button type="primary" style="margin-top: 30px" @click="dialogVisible = true">新增地址</el-button>
+        <el-button type="primary" style="margin-top: 30px" @click="jumpTo('/createOrder/payment')">下 一 步</el-button>
+
       </div>
       <el-dialog
         title="收货地址编辑"
@@ -64,8 +63,7 @@
                           :area="input.area"
                           @province="selectProvince"
                           @city="selectCity"
-                          @area="selectArea"
-                          @selected="onSelected"></distpicker>
+                          @area="selectArea"></distpicker>
             </el-row>
             <br />
             <el-row class="margin-inner-style">
@@ -93,22 +91,56 @@
       </span>
       </el-dialog>
     </div>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import BreadCrumb from '../../components/BreadCrumb'
 import distpicker from '../../components/dispicker/distpicker'
+import BreadCrumb from '../../components/BreadCrumb'
 
 export default {
-  name: 'myAddress',
+  name: 'selectAddress',
   components: {
     BreadCrumb,
     distpicker
   },
   data () {
     return {
-      addresses: [],
+      addresses: [
+        {
+          province: '北京市',
+          city: '北京市',
+          area: '东城区',
+          address: '曹安公路4800号',
+          name: '梁xy',
+          phone: '18868629263'
+        },
+        {
+          province: '北京市',
+          city: '北京市',
+          area: '东城区',
+          address: '曹安公路4800号',
+          name: '梁xy',
+          phone: '18868629263'
+        },
+        {
+          province: '北京市',
+          city: '北京市',
+          area: '东城区',
+          address: '曹安公路4800号',
+          name: '梁xy',
+          phone: '18868629263'
+        },
+        {
+          province: '北京市',
+          city: '北京市',
+          area: '东城区',
+          address: '曹安公路4800号',
+          name: '梁xy',
+          phone: '18868629263'
+        }
+      ],
       placeholders: {
         province: '------- 省 --------',
         city: '--- 市 ---',
@@ -188,6 +220,13 @@ export default {
     },
     selectArea (value) {
       this.input.area = value.value
+    },
+    handleCurrentChange (val) {
+      this.currentRow = val
+    },
+    jumpTo (path) {
+      // console.log(path)
+      this.$router.replace({path: path})
     }
   }
 }

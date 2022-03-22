@@ -40,9 +40,15 @@ export default new Router({
           children: [
             {
               path: '/createOrder',
-              name: 'createOrder',
-              component: () => import('@/views/payment/createOrder'),
-              meta: {title: '创建订单'}
+              name: 'selectAddress',
+              component: () => import('@/views/payment/selectAddress'),
+              meta: {title: '选择收货地址'},
+              children: [{
+                path: '/createOrder/payment',
+                name: 'createOrder',
+                component: () => import('@/views/payment/createOrder'),
+                meta: {title: '创建订单'}
+              }]
             }
           ]},
         {
