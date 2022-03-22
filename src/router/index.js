@@ -63,6 +63,14 @@ export default new Router({
       path: '/searchResult',
       name: 'SearchResult',
       component: () => import('@/views/search/searchResult')
+    }, {
+      path: '/bookDetail',
+      name: 'BookDetail',
+      component: () => import('@/views/book/bookDetail')
+    }, {
+      path: '/shelveBook',
+      name: 'ShelveBook',
+      component: () => import('@/views/book/shelveBook')
     }
   ]
 })

@@ -55,7 +55,8 @@ export default {
           href: '#/userHome/myChart'
         },
         {
-          name: '上架商品'
+          name: '上架商品',
+          href: '#/shelveBook'
         }
       ]
     }

@@ -84,6 +84,7 @@ button {
 }
 .bar {
   margin-top:250px;
+  margin-left: 150px;
 }
 .bar form {
   height: 42px;
