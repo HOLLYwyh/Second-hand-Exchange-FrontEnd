@@ -11,7 +11,7 @@
           <el-input type="text" placeholder="搜索书籍"  v-model="keywords" class="input"></el-input>
         </li>
         <li>
-          <el-button class="button" type="primary" style="padding-left: 9px">搜索</el-button>
+          <el-button class="button" type="primary" style="padding-left: 9px" @click="search">搜索</el-button>
         </li>
         <li>
           <el-avatar class="head" :src="avatar" size="large"></el-avatar>
@@ -59,6 +59,11 @@ export default {
           href: '#/shelveBook'
         }
       ]
+    }
+  },
+  methods: {
+    search () {
+      if (this.keywords === '') this.$router.push('/search')
     }
   }
 }

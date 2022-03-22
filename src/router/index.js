@@ -91,6 +91,11 @@ export default new Router({
       path: '/shelveBook',
       name: 'ShelveBook',
       component: () => import('@/views/book/shelveBook')
+    },
+    {
+      path: '/communicate',
+      name: 'communicate',
+      component: () => import('@/views/communicate/communicate')
     }
   ]
 })
