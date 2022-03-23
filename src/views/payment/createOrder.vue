@@ -114,7 +114,7 @@ export default {
           price: 12,
           number: 1,
           goodTotal: 12
-        },
+        }
       ],
       addresses: [
         {
