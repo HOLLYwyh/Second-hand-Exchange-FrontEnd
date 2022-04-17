@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import { loginAPI } from '../../api/login/login'
+
 export default {
   name: 'login',
   data () {
@@ -52,8 +54,21 @@ export default {
       }
     }
   },
+  created () {
+    if (window.sessionStorage.getItem('userID') !== null) this.$router.push('/index')
+  },
   methods: {
     login () {
+      const params = {'userEmail': this.form.email, 'userPassword': this.form.password}
+      loginAPI(params).then(res => {
+        console.log(res)
+        if (res.status === 200) {
+          this.$router.push('/index')
+          window.sessionStorage.setItem('userID', res.data.userId)
+        }
+      }).catch(() => {
+        this.$message.error('请填写正确的邮箱或密码！！')
+      })
     }
   }
 }
