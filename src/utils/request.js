@@ -5,7 +5,7 @@ axios.defaults.withCredentials = true
 
 // manageClass an axios instance
 const service = axios.create({
-  baseURL: '', // url = base url + request url
+  baseURL: 'http://81.69.225.235:8081/', // url = base url + request url
   // 这里是后端地址
 
   // url = base url + request url

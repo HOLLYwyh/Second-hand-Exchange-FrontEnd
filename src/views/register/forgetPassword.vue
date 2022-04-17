@@ -12,7 +12,7 @@
               <el-form-item label="邮箱" prop="email" class="blackItem">
                 <el-row type="flex">
                   <el-input v-model="form.email" placeholder="请输入邮箱" clearable></el-input>
-                  <el-button type="primary" plain :disabled="isOK">{{ timeCnt }}</el-button>
+                  <el-button type="primary" plain :disabled="isOK" @click="sendEmail">{{ timeCnt }}</el-button>
                 </el-row>
               </el-form-item>
 
@@ -26,7 +26,7 @@
                 <el-input v-model="form.checkPassword" showPassword placeholder="请再次输入密码" clearable></el-input>
               </el-form-item>
               <el-row type="flex" justify="center" style="margin: 0px 0 10px 0px">
-                <el-button class="buttonColor" size="medium" round style="width: 70%;margin-left: 30px" type="primary">找回</el-button>
+                <el-button class="buttonColor" size="medium" round style="width: 70%;margin-left: 30px" type="primary" @click="changePassword">找回</el-button>
               </el-row>
             </el-form>
           </el-col>
@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import { email, getBackPassword } from '../../api/register/register'
+
 export default {
   data () {
     return {
@@ -48,6 +50,7 @@ export default {
       timeCnt: '验证',
       isOK: false,
       cnthandler: null,
+      canRegister: true,
       form: {
         password: '',
         checkPassword: '',
@@ -61,7 +64,7 @@ export default {
           {
             pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,10}$/,
             message:
-              '必须包含大小写字母和数字的组合，不能使用特殊字符，长度在 8-10 之间',
+              '必须包含大小写字母和数字的组合，长度在 8-20 之间',
             trigger: 'blur'
           }
         ],
@@ -70,8 +73,10 @@ export default {
           {
             validator: (rule, value, callback) => {
               if (value !== this.form.password) {
+                this.canRegister = false
                 callback(new Error('两次输入密码不一致'))
               } else {
+                this.canRegister = true
                 callback()
               }
             },
@@ -85,6 +90,50 @@ export default {
         verifyEmail: [
           { required: true, message: '请输入验证码', trigger: 'change' }
         ]
+      }
+    }
+  },
+  created () {
+    if (window.sessionStorage.getItem('userID') !== null) this.$router.push('/index')
+  },
+  methods: {
+    cnt: function () {
+      this.cnthandler = setTimeout(() => {
+        if (this.timeCnt === 0) {
+          clearInterval(this.cnthandler)
+          this.timeCnt = '验证'
+          this.isOK = false
+          return
+        }
+        this.timeCnt--
+        this.cnt()
+      }, 1000)
+    },
+    sendEmail () {
+      if (this.timeCnt === '验证') {
+        this.timeCnt = 30
+        this.cnt()
+        const params = {'userEmail': this.form.email}
+        email(params).then(res => {
+        })
+      }
+    },
+    changePassword () {
+      if (this.canRegister && (this.form.password !== '') && (this.form.verifyEmail !== '') && (this.form.password === this.form.checkPassword)) {
+        const params = {'userEmail': this.form.email, 'verifyCode': this.form.verifyEmail, 'userPassword': this.form.password}
+        getBackPassword(params).then(res => {
+          if (res.status === 200) {
+            this.$message({
+              message: '修改密码成功',
+              type: 'success'
+            })
+            this.$router.push('/login')
+          } else {
+            this.$message.error('修改失败,请重新填写相关信息')
+          }
+        })
+      } else {
+        this.$message.error('请填写完整的信息！！')
       }
     }
   }

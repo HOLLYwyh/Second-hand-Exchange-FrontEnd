@@ -19,15 +19,15 @@
             <el-form-item label="邮箱" prop="email" class="blackItem">
               <el-row type="flex">
                 <el-input v-model="form.email" placeholder="请输入邮箱" clearable></el-input>
-                <el-button type="primary" plain :disabled="isOK">{{ timeCnt }}</el-button>
+                <el-button type="primary" plain :disabled="isOK" @click="sendEmail">{{ timeCnt }}</el-button>
               </el-row>
             </el-form-item>
             <el-form-item label="验证码" prop="verifyEmail" class="blackItem">
-              <el-input v-model="form.verifyEmail" placeholder="请输入验证码" clearable></el-input>
+              <el-input v-model="form.verifyCode" placeholder="请输入验证码" clearable></el-input>
             </el-form-item>
 
             <el-row type="flex" justify="center" style="margin: 0 0 10px 0">
-              <el-button size="medium" round style="width: 70%" type="primary" class="Register_Button">注册</el-button>
+              <el-button size="medium" round style="width: 70%" type="primary" class="Register_Button" @click="gotoRegister">注册</el-button>
             </el-row>
           </el-form>
         </el-col>
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { email, register } from '../../api/register/register'
 
 export default {
   props: ['type'],
@@ -51,28 +52,29 @@ export default {
       timeCnt: '验证',
       isOK: true,
       cnthandler: null,
+      canRegister: true,
       form: {
         username: '',
         password: '',
         checkPassword: '',
         email: '',
-        verifyEmail: ''
+        verifyCode: ''
       },
       rules: {
         username: [
           {required: true, message: '请输入用户名', trigger: 'blur'},
           {
-            max: 10,
-            message: '长度为1~10个字符',
+            max: 20,
+            message: '长度为1~20个字符',
             trigger: 'blur'
           }
         ],
         password: [
           {required: true, message: '请输入密码', trigger: 'blur'},
           {
-            pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,10}$/,
+            pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,20}$/,
             message:
-              '必须包含大小写字母和数字的组合，长度在 8-10 之间',
+              '必须包含大小写字母和数字的组合，长度在 8-20 之间',
             trigger: 'blur'
           }
         ],
@@ -81,8 +83,10 @@ export default {
           {
             validator: (rule, value, callback) => {
               if (value !== this.form.password) {
+                this.canRegister = false
                 callback(new Error('两次输入密码不一致'))
               } else {
+                this.canRegister = true
                 callback()
               }
             },
@@ -95,20 +99,22 @@ export default {
             validator: (rule, value, callback) => {
               if ((/^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/).test(value)) {
                 this.isOK = false
+                this.canRegister = true
                 callback()
               } else {
                 this.isOK = true
+                this.canRegister = false
                 callback(new Error('请填写正确的邮箱'))
               }
             },
             trigger: 'change'
           }
-        ],
-        verifyEmail: [
-          {required: true, message: '请输入验证码', trigger: 'change'}
         ]
       }
     }
+  },
+  created () {
+    if (window.sessionStorage.getItem('userID') !== null) this.$router.push('/index')
   },
   methods: {
     cnt: function () {
@@ -122,6 +128,33 @@ export default {
         this.timeCnt--
         this.cnt()
       }, 1000)
+    },
+    gotoRegister () {
+      if (this.canRegister && (this.form.username !== '') && (this.form.email !== '') && (this.form.password === this.form.checkPassword) && (this.form.verifyCode !== '')) {
+        const params = {'userName': this.form.username, 'userPassword': this.form.password, 'userEmail': this.form.email, 'verifyCode': this.form.verifyCode}
+        register(params).then(res => {
+          if (res.data === 200) {
+            this.$message({
+              message: '注册成功',
+              type: 'success'
+            })
+            this.$router.push('/login')
+          } else {
+            this.$message.error('注册失败,请重新注册')
+          }
+        })
+      } else {
+        this.$message.error('请填写完整的注册信息！！')
+      }
+    },
+    sendEmail () {
+      if (this.timeCnt === '验证') {
+        this.timeCnt = 30
+        this.cnt()
+        const params = { 'userEmail': this.form.email }
+        email(params).then(res => {
+        })
+      }
     }
   }
 }
