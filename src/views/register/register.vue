@@ -97,7 +97,7 @@ export default {
           {required: true, message: '请输入邮箱', trigger: 'change'},
           {
             validator: (rule, value, callback) => {
-              if ((/^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/).test(value)) {
+              if ((/^\w[-\w.+]*@tongji.edu.cn/).test(value)) {
                 this.isOK = false
                 this.canRegister = true
                 callback()
@@ -132,7 +132,9 @@ export default {
     gotoRegister () {
       if (this.canRegister && (this.form.username !== '') && (this.form.email !== '') && (this.form.password === this.form.checkPassword) && (this.form.verifyCode !== '')) {
         const params = {'userName': this.form.username, 'userPassword': this.form.password, 'userEmail': this.form.email, 'verifyCode': this.form.verifyCode}
+        console.log(params)
         register(params).then(res => {
+          console.log(res)
           if (res.data === 200) {
             this.$message({
               message: '注册成功',
