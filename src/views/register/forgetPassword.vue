@@ -32,7 +32,7 @@
           </el-col>
         </el-row>
         <el-row type="flex" justify="center">
-          <router-link to="/login"><el-link :underline="false" style="color:white;margin-left: 30px">返回</el-link>
+          <router-link to="/"><el-link :underline="false" style="color:white;margin-left: 30px">返回</el-link>
           </router-link>
         </el-row>
       </el-card>
@@ -111,7 +111,7 @@ export default {
     },
     sendEmail () {
       if (this.timeCnt === '验证') {
-        this.timeCnt = 30
+        this.timeCnt = 300
         this.cnt()
         const params = {'userEmail': this.form.email}
         email(params).then(res => {
@@ -122,14 +122,13 @@ export default {
       if (this.canRegister && (this.form.password !== '') && (this.form.verifyEmail !== '') && (this.form.password === this.form.checkPassword)) {
         const params = {'userEmail': this.form.email, 'verifyCode': this.form.verifyEmail, 'userPassword': this.form.password}
         getBackPassword(params).then(res => {
-          if (res.status === 200) {
+          if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+          else {
             this.$message({
               message: '修改密码成功',
               type: 'success'
             })
-            this.$router.push('/login')
-          } else {
-            this.$message.error('修改失败,请重新填写相关信息')
+            this.$router.push('/')
           }
         })
       } else {
