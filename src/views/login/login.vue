@@ -61,15 +61,13 @@ export default {
     login () {
       const params = {'userEmail': this.form.email, 'userPassword': this.form.password}
       loginAPI(params).then(res => {
-        console.log(res)
-        if (res.status === 200) {
+        if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+        else {
           this.$router.push('/index')
           window.sessionStorage.setItem('userID', res.data.userId)
           window.sessionStorage.setItem('userEmail', res.data.userEmail)
           window.sessionStorage.setItem('userName', res.data.userName)
         }
-      }).catch(() => {
-        this.$message.error('请填写正确的邮箱或密码！！')
       })
     }
   }

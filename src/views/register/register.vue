@@ -33,7 +33,7 @@
         </el-col>
       </el-row>
       <el-row type="flex" justify="center">
-        <router-link to="/login">
+        <router-link to="/">
           <el-link :underline="false" style="color: white;margin-left: 20px">返回</el-link>
         </router-link>
       </el-row>
@@ -94,17 +94,17 @@ export default {
           }
         ],
         email: [
-          {required: true, message: '请输入邮箱', trigger: 'change'},
+          {required: true, message: '请输入同济邮箱', trigger: 'change'},
           {
             validator: (rule, value, callback) => {
-              if ((/^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/).test(value)) {
+              if ((/^\w[-\w.+]*@tongji.edu.cn/).test(value)) {
                 this.isOK = false
                 this.canRegister = true
                 callback()
               } else {
                 this.isOK = true
                 this.canRegister = false
-                callback(new Error('请填写正确的邮箱'))
+                callback(new Error('请填写正确的同济邮箱'))
               }
             },
             trigger: 'change'
@@ -133,14 +133,13 @@ export default {
       if (this.canRegister && (this.form.username !== '') && (this.form.email !== '') && (this.form.password === this.form.checkPassword) && (this.form.verifyCode !== '')) {
         const params = {'userName': this.form.username, 'userPassword': this.form.password, 'userEmail': this.form.email, 'verifyCode': this.form.verifyCode}
         register(params).then(res => {
-          if (res.data === 200) {
+          if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+          else {
             this.$message({
               message: '注册成功',
               type: 'success'
             })
-            this.$router.push('/login')
-          } else {
-            this.$message.error('注册失败,请重新注册')
+            this.$router.push('/')
           }
         })
       } else {
@@ -149,7 +148,7 @@ export default {
     },
     sendEmail () {
       if (this.timeCnt === '验证') {
-        this.timeCnt = 30
+        this.timeCnt = 300
         this.cnt()
         this.isOK = true
 

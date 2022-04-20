@@ -14,32 +14,14 @@
             <div class="box-body">
               <div class="progress-bar">
                 <el-steps :active=active align-center>
-                  <el-step title="步骤1" description="填写个人信息"></el-step>
-                  <el-step title="步骤2" description="上传商品基本信息"></el-step>
-                  <el-step title="步骤3" description="上传商品图片"></el-step>
-                  <el-step title="步骤4" description="成功上传商品"></el-step>
+                  <el-step title="步骤1" description="上传商品基本信息"></el-step>
+                  <el-step title="步骤2" description="上传商品图片"></el-step>
+                  <el-step title="步骤3" description="成功上传商品"></el-step>
                 </el-steps>
               </div>
               <!--填写内容-->
               <div>
                 <!--步骤一-->
-                <div v-show="active === 0">
-                  <div class="info-title">请填写您的个人信息</div>
-                  <div style="display: flex;justify-content: center">
-                    <el-form  label-width="80px" :model="userInfo">
-                      <el-form-item label="学号" class="form-item">
-                        <el-input v-model="userInfo.userId" ></el-input>
-                      </el-form-item>
-                      <el-form-item label="姓名" class="form-item">
-                        <el-input v-model="userInfo.userName"></el-input>
-                      </el-form-item>
-                      <el-form-item label="邮箱" class="form-item">
-                        <el-input v-model="userInfo.userEmail"></el-input>
-                      </el-form-item>
-                    </el-form>
-                  </div>
-                </div>
-                <!--步骤二-->
                 <div v-show="active === 1">
                   <div class="info-title">请填写商品的基本信息</div>
                   <div style="display: flex;justify-content: center">
@@ -82,7 +64,7 @@
                     </el-form>
                   </div>
                 </div>
-                <!--步骤三-->
+                <!--步骤二-->
                 <div v-show="active === 2">
                   <div class="info-title">请上传商品的相关图片</div>
                   <div>
@@ -113,7 +95,7 @@
                     </div>
                   </div>
                 </div>
-                <!--步骤四-->
+                <!--步骤三-->
                 <div v-show="active === 3">
                   <div class="info-title">信息确认</div>
                   <div style="display: flex;justify-content: center">
