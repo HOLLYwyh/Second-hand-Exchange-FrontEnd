@@ -61,10 +61,13 @@ export default {
     login () {
       const params = {'userEmail': this.form.email, 'userPassword': this.form.password}
       loginAPI(params).then(res => {
+        console.log(res)
         if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
         else {
           this.$router.push('/index')
           window.sessionStorage.setItem('userID', res.data.userId)
+          window.sessionStorage.setItem('tokenName', res.data.tokenName)
+          window.sessionStorage.setItem('tokenValue', res.data.tokenValue)
         }
       })
     }
