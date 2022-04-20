@@ -7,6 +7,17 @@
       </div>
       <el-col :span="8" :offset="8" class="border-style">
         <br />
+<!--        <el-row class="margin-inner-style">-->
+<!--          <el-col :span="12">-->
+<!--            <div style="float: left;font-size: x-small">-->
+<!--              <img :src="user.userImage"/>-->
+<!--            </div>-->
+<!--          </el-col>-->
+<!--          <el-col :span="12" >-->
+<!--          </el-col>-->
+<!--        </el-row>-->
+<!--        <el-divider></el-divider>-->
+
           <el-row class="margin-inner-style">
             <el-col :span="12">
               <div style="float: left;font-size: x-small">
@@ -59,6 +70,7 @@
 
 <script>
 import BreadCrumb from '../../components/BreadCrumb'
+import request from '../../utils/request'
 export default {
   name: 'mySecurity',
   components: {
@@ -75,6 +87,16 @@ export default {
       // console.log(path)
       this.$router.push({path: path})
     }
+  },
+  mounted () {
+    request({
+      url: 'user/getUserInfo',
+      method: 'get',
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      data: null
+    }).then(res => {
+      console.log(res)
+    })
   }
 }
 </script>
