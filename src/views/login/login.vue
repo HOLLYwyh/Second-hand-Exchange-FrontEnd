@@ -65,6 +65,8 @@ export default {
         if (res.status === 200) {
           this.$router.push('/index')
           window.sessionStorage.setItem('userID', res.data.userId)
+          window.sessionStorage.setItem('userEmail', res.data.userEmail)
+          window.sessionStorage.setItem('userName', res.data.userName)
         }
       }).catch(() => {
         this.$message.error('请填写正确的邮箱或密码！！')

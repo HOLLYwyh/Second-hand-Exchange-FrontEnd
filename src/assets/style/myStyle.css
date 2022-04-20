@@ -10,12 +10,13 @@
   border-width: thin;
 }
 .button-style{
-  background-color: #ffcf49;
   color: #252F3F;
   width: 150px;
   font-weight: bolder;
   margin-bottom: 20px;
   margin-right: 10px;
+  color:white;
+
 }
 .margin-inner-style{
   margin-left: 30px;

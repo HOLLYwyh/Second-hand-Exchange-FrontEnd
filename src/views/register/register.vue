@@ -151,6 +151,8 @@ export default {
       if (this.timeCnt === '验证') {
         this.timeCnt = 30
         this.cnt()
+        this.isOK = true
+
         const params = { 'userEmail': this.form.email }
         email(params).then(res => {
         })

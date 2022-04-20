@@ -10,12 +10,11 @@
           <el-row class="margin-inner-style">
             <el-col :span="12">
               <div style="float: left;font-size: x-small">
-                <p><b>姓名：</b></p>
-                <p>xiaoyi Liang</p>
+                <p style="float: left"><b>姓名：</b></p>
+                <p>{{userName}}</p>
               </div>
             </el-col>
             <el-col :span="12" >
-              <el-button type="primary" size="mini" style="margin-top: 30px;">修改</el-button>
             </el-col>
           </el-row>
         <el-divider></el-divider>
@@ -23,13 +22,11 @@
         <el-row class="margin-inner-style">
           <el-col :span="12">
             <div style="float: left;font-size: x-small">
-              <p><b>手机号码：</b></p>
-              <p>188******63</p>
+              <p style="float: left"><b>邮箱：</b></p>
+              <p>{{userEmail}}</p>
             </div>
           </el-col>
-          <el-col :span="12" >
-            <el-button type="primary"  size="mini" style="margin-top: 30px" @click.native="jumpTo('/userHome/mySecurity/resetMyPhone')">修改</el-button>
-          </el-col>
+
         </el-row>
         <el-divider></el-divider>
 
@@ -66,6 +63,12 @@ export default {
   name: 'mySecurity',
   components: {
     BreadCrumb
+  },
+  data () {
+    return {
+      userEmail: window.sessionStorage.getItem('userEmail'),
+      userName: window.sessionStorage.getItem('userName')
+    }
   },
   methods: {
     jumpTo (path) {

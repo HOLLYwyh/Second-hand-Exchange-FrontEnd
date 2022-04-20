@@ -22,7 +22,7 @@
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="accountInfo">账号信息</el-dropdown-item>
+              <el-dropdown-item command="accountInfo" @click.native="toUserHome()">账号信息</el-dropdown-item>
               <el-dropdown-item command="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -63,6 +63,9 @@ export default {
   methods: {
     search () {
       if (this.keywords === '') this.$router.push('/search')
+    },
+    toUserHome () {
+      this.$router.push('/userHome')
     }
   }
 }
