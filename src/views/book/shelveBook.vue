@@ -24,44 +24,42 @@
                 <!--步骤一-->
                 <div v-show="active === 0">
                   <div class="info-title">请填写商品的基本信息</div>
-                  <el-form :label-position="labelPosition" label-width="80px">
+                  <el-form :label-position="labelPosition" label-width="300px" style="margin-top: 30px">
                     <el-form-item label="商品名称">
-                      <el-input v-model="formData.goodsName"></el-input>
+                      <el-input class="book-info-input" v-model="formData.goodsName" clearable></el-input>
                     </el-form-item>
                     <el-form-item label="商品价格">
-                      <el-input v-model="formData.goodsPrice"></el-input>
+                      <el-input class="book-info-input" v-model="formData.goodsPrice" clearable>
+                        <i slot="suffix" style="font-style: normal;color: #000000;font-weight: bold;line-height: 40px;margin-left: -50px">元</i>
+                      </el-input>
                     </el-form-item>
                     <el-form-item label="商品数量">
-                      <el-input v-model="formData.sellNum"></el-input>
+                      <el-input class="book-info-input" v-model="formData.sellNum" clearable>
+                        <i slot="suffix" style="font-style: normal;color: #000000;font-weight: bold;line-height: 40px;margin-left: -50px">本</i>
+                      </el-input>
                     </el-form-item>
                     <el-form-item label="商品种类">
-                      <el-input v-model="formData.goodsCategory"></el-input>
+                      <el-input class="book-info-input" v-model="formData.goodsCategory" clearable></el-input>
                     </el-form-item>
                     <el-form-item label="商品简介">
-                      <el-input v-model="formData.goodsIntroduction"></el-input>
+                      <el-input class="book-info-input" v-model="formData.goodsIntroduction" clearable type="textarea" :rows="2"></el-input>
                     </el-form-item>
                   </el-form>
+                  <el-button @click="nextStep" style="margin-top: 10px">下一步</el-button>
                 </div>
                 <!--步骤二-->
                 <div v-show="active === 1">
                   <div class="info-title">请上传商品的相关图片</div>
                   <div>
                     <el-upload
-                      class="upload-import"
-                      action=""
-                      ref="uploadImport"
-                      :on-preview="handlePreview"
-                      :on-remove="handleRemove"
-                      :on-change = "handleChange"
-                      :before-remove="beforeRemove"
-                      multiple
-                      :limit="3"
-                      :auto-upload= "false"
-                      :file-list="fileList">
+                      list-type="picture-card" action="" :on-preview="handlePreview" :on-remove="handleRemove" :on-change = "handleChange" :before-remove="beforeRemove"
+                      multiple :limit="5" :auto-upload= "false" :file-list="fileList" style="margin-top: 50px" accept=".png,.jpg">
                       <el-button size="small" type="primary">点击上传</el-button>
-                      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且最多上传五个文件</div>
                     </el-upload>
                   </div>
+                  <el-button  @click="lastStep" style="margin-top: 50px">上一步</el-button>
+                  <el-button  @click="nextStep" style="margin-top: 50px">下一步</el-button>
                 </div>
                 <!--步骤三-->
                 <div v-show="active === 2">
@@ -69,13 +67,12 @@
                   <div style="display: flex;justify-content: center">
                     <div class="confirmSubmit">请确认是否是提交？</div>
                   </div>
+                  <el-button v-show="active !== 0" @click="lastStep" style="margin-top: 120px">上一步</el-button>
+                  <el-button v-show="active === 2" @click="submit" class="button" type="success" style="margin-top: 100px">提交</el-button>
                 </div>
               </div>
               <!--提交按钮-->
               <div>
-                <el-button v-show="active !== 0" @click="lastStep" class="button">上一步</el-button>
-                <el-button v-show="active !== 2" @click="nextStep" class="button">下一步</el-button>
-                <el-button v-show="active === 2" @click="submit" class="button" type="success">提交</el-button>
               </div>
             </div>
           </div>
@@ -192,8 +189,12 @@ export default {
       console.log(file)
     },
     handleChange (file) {
-      console.log(file)
-      this.fileList.push(file)
+      let fileType = file.name.substring(file.name.lastIndexOf('.') + 1)
+      if (fileType === 'jpg' || fileType === 'png') {
+        this.fileList.push(file)
+      } else {
+        this.$message.error('请上传正确类型的文件')
+      }
       console.log(this.fileList.length)
     },
     beforeRemove (file, fileList) {
@@ -241,7 +242,7 @@ export default {
 
 .box-body{
   padding: 1px 0;
-  height: 700px;
+  height: 600px;
   background-color: whitesmoke;
 }
 
@@ -252,9 +253,6 @@ export default {
   margin-top: 10px;
   font-size: 24px;
   text-align: center;
-}
-.button{
-  margin-top: 50px;
 }
 .confirmSubmit{
   text-align: center;
@@ -270,5 +268,9 @@ export default {
 }
 .avatar-uploader .el-upload:hover {
   border-color: #409EFF;
+}
+.book-info-input{
+  width: 500px;
+  margin-left: -250px;
 }
 </style>
