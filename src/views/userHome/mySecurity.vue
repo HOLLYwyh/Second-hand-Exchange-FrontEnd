@@ -7,22 +7,22 @@
       </div>
       <el-col :span="8" :offset="8" class="border-style">
         <br />
-<!--        <el-row class="margin-inner-style">-->
-<!--          <el-col :span="12">-->
-<!--            <div style="float: left;font-size: x-small">-->
-<!--              <img :src="user.userImage"/>-->
-<!--            </div>-->
-<!--          </el-col>-->
-<!--          <el-col :span="12" >-->
-<!--          </el-col>-->
-<!--        </el-row>-->
-<!--        <el-divider></el-divider>-->
+        <el-row class="margin-inner-style">
+          <el-col :span="12">
+            <div style="float: left;font-size: x-small">
+              <img :src="user.userImage"/>
+            </div>
+          </el-col>
+          <el-col :span="12" >
+          </el-col>
+        </el-row>
+        <el-divider></el-divider>
 
           <el-row class="margin-inner-style">
             <el-col :span="12">
               <div style="float: left;font-size: x-small">
                 <p style="float: left"><b>姓名：</b></p>
-                <p>{{userName}}</p>
+                <p>{{user.userName}}</p>
               </div>
             </el-col>
             <el-col :span="12" >
@@ -33,14 +33,14 @@
         <el-row class="margin-inner-style">
           <el-col :span="12">
             <div style="float: left;font-size: x-small">
-              <p style="float: left"><b>邮箱：</b></p>
-              <p>{{userEmail}}</p>
+              <p style="float: left"><b>学号：</b></p>
+              <p>{{user.studentId}}</p>
             </div>
           </el-col>
-
+          <el-col :span="12" >
+          </el-col>
         </el-row>
         <el-divider></el-divider>
-
         <el-row class="margin-inner-style">
           <el-col :span="12">
             <div style="float: left;font-size: x-small">
@@ -78,8 +78,8 @@ export default {
   },
   data () {
     return {
-      userEmail: window.sessionStorage.getItem('userEmail'),
-      userName: window.sessionStorage.getItem('userName')
+
+      user: null
     }
   },
   methods: {
@@ -95,7 +95,8 @@ export default {
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       data: null
     }).then(res => {
-      console.log(res)
+      this.user = res.data
+      console.log(this.user)
     })
   }
 }

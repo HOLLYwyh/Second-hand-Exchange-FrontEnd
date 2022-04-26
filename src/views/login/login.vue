@@ -55,18 +55,21 @@ export default {
     }
   },
   created () {
-    if (window.sessionStorage.getItem('userID') !== null) this.$router.push('/index')
+    if (window.sessionStorage.getItem('tokenValue') !== null) this.$router.push('/index')
   },
   methods: {
     login () {
       const params = {'userEmail': this.form.email, 'userPassword': this.form.password}
       loginAPI(params).then(res => {
+        console.log(res)
         if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
         else {
           this.$router.push('/index')
           window.sessionStorage.setItem('userID', res.data.userId)
           window.sessionStorage.setItem('userEmail', res.data.userEmail)
           window.sessionStorage.setItem('userName', res.data.userName)
+          window.sessionStorage.setItem('tokenName', res.data.tokenName)
+          window.sessionStorage.setItem('tokenValue', res.data.tokenValue)
         }
       })
     }

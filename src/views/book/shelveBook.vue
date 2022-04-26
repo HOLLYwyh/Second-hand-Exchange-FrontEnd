@@ -22,81 +22,49 @@
               <!--填写内容-->
               <div>
                 <!--步骤一-->
-                <div v-show="active === 1">
+                <div v-show="active === 0">
                   <div class="info-title">请填写商品的基本信息</div>
-                  <div style="display: flex;justify-content: center">
-                    <el-form ref="form" :model="bookInfo" label-width="80px" style="margin-top: 20px">
-                      <el-form-item label="商品名称">
-                        <el-input v-model="bookInfo.name"></el-input>
-                      </el-form-item>
-                      <el-form-item label="活动区域">
-                        <el-select v-model="bookInfo.region" placeholder="请选择活动区域">
-                          <el-option label="区域一" value="shanghai"></el-option>
-                          <el-option label="区域二" value="beijing"></el-option>
-                        </el-select>
-                      </el-form-item>
-                      <el-form-item label="活动时间">
-                        <el-col :span="11">
-                          <el-date-picker type="date" placeholder="选择日期" v-model="bookInfo.date1" style="width: 100%;"></el-date-picker>
-                        </el-col>
-                        <el-col class="line" :span="2">-</el-col>
-                        <el-col :span="11">
-                          <el-time-picker placeholder="选择时间" v-model="bookInfo.date2" style="width: 100%;"></el-time-picker>
-                        </el-col>
-                      </el-form-item>
-                      <el-form-item label="即时配送">
-                        <el-switch v-model="bookInfo.delivery"></el-switch>
-                      </el-form-item>
-                      <el-form-item label="活动性质">
-                        <el-checkbox-group v-model="bookInfo.type">
-                          <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
-                          <el-checkbox label="地推活动" name="type"></el-checkbox>
-                          <el-checkbox label="线下主题活动" name="type"></el-checkbox>
-                          <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
-                        </el-checkbox-group>
-                      </el-form-item>
-                      <el-form-item label="特殊资源">
-                        <el-radio-group v-model="bookInfo.resource">
-                          <el-radio label="线上品牌商赞助"></el-radio>
-                          <el-radio label="线下场地免费"></el-radio>
-                        </el-radio-group>
-                      </el-form-item>
-                    </el-form>
-                  </div>
+                  <el-form :label-position="labelPosition" label-width="80px">
+                    <el-form-item label="商品名称">
+                      <el-input v-model="formData.goodsName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="商品价格">
+                      <el-input v-model="formData.goodsPrice"></el-input>
+                    </el-form-item>
+                    <el-form-item label="商品数量">
+                      <el-input v-model="formData.sellNum"></el-input>
+                    </el-form-item>
+                    <el-form-item label="商品种类">
+                      <el-input v-model="formData.goodsCategory"></el-input>
+                    </el-form-item>
+                    <el-form-item label="商品简介">
+                      <el-input v-model="formData.goodsIntroduction"></el-input>
+                    </el-form-item>
+                  </el-form>
                 </div>
                 <!--步骤二-->
-                <div v-show="active === 2">
+                <div v-show="active === 1">
                   <div class="info-title">请上传商品的相关图片</div>
                   <div>
-                    <div>
-                      <div>请上传商品的主要图片</div>
-                      <el-upload
-                        class="avatar-uploader"
-                        action="https://jsonplaceholder.typicode.com/posts/"
-                        :show-file-list="false"
-                        :on-success="handleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload">
-                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                      </el-upload>
-                    </div>
-                    <div>
-                      <div>请上传商品的说明图片</div>
-                      <el-upload
-                        action="https://jsonplaceholder.typicode.com/posts/"
-                        list-type="picture-card"
-                        :on-preview="handlePictureCardPreview"
-                        :on-remove="handleRemove">
-                        <i class="el-icon-plus"></i>
-                      </el-upload>
-                      <el-dialog :visible.sync="dialogVisible">
-                        <img width="100%" :src="dialogImageUrl" alt="">
-                      </el-dialog>
-                    </div>
+                    <el-upload
+                      class="upload-import"
+                      action=""
+                      ref="uploadImport"
+                      :on-preview="handlePreview"
+                      :on-remove="handleRemove"
+                      :on-change = "handleChange"
+                      :before-remove="beforeRemove"
+                      multiple
+                      :limit="3"
+                      :auto-upload= "false"
+                      :file-list="fileList">
+                      <el-button size="small" type="primary">点击上传</el-button>
+                      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                    </el-upload>
                   </div>
                 </div>
                 <!--步骤三-->
-                <div v-show="active === 3">
+                <div v-show="active === 2">
                   <div class="info-title">信息确认</div>
                   <div style="display: flex;justify-content: center">
                     <div class="confirmSubmit">请确认是否是提交？</div>
@@ -106,8 +74,8 @@
               <!--提交按钮-->
               <div>
                 <el-button v-show="active !== 0" @click="lastStep" class="button">上一步</el-button>
-                <el-button v-show="active !== 3" @click="nextStep" class="button">下一步</el-button>
-                <el-button v-show="active === 3" @click="submit" class="button" type="success">提交</el-button>
+                <el-button v-show="active !== 2" @click="nextStep" class="button">下一步</el-button>
+                <el-button v-show="active === 2" @click="submit" class="button" type="success">提交</el-button>
               </div>
             </div>
           </div>
@@ -119,38 +87,73 @@
 
 <script>
 import NavBar from '../../components/NavBar'
+import {shelveBook} from '../../api/book/shelveBook'
 
 export default {
-  // TODO: 页面整体有点空，后续可以额外添加一些内容
   name: 'ShelveBook',
   components: {NavBar},
+  props: {
+    pk: {
+      type: String,
+      default: ''
+    },
+    fileUrl: {
+      type: String,
+      default: ''
+    },
+    fileName: {
+      type: String,
+      default: ''
+    },
+    objId: {
+      type: String,
+      default: ''
+    },
+    objType: {
+      type: String,
+      default: ''
+    },
+    isWatch: {
+      type: Boolean,
+      default: false
+    },
+    limit: {
+      type: Number,
+      default: 10
+    },
+    fileType: {
+      type: Array,
+      default: function () {
+        return ['jpg', 'png', 'jpeg']
+      }
+    },
+    showFile: {
+      type: Boolean,
+      default: true
+    }
+  },
   data () {
     return {
       active: 0,
-      // TODO:这里仅供参考，之后还有可能修改
-      // 步骤一：用户信息
-      userInfo: {
-        userId: '',
-        userName: '',
-        userEmail: ''
+      // 步骤一：商品信息
+      labelPosition: 'right',
+      formData: {
+        goodsCategory: '',
+        goodsName: '',
+        goodsPrice: '',
+        sellNum: '',
+        goodsIntroduction: ''
       },
-      // 步骤二：商品信息
-      // TODO: 确定数据库之后再做进一步修改
-      bookInfo: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      },
-      // 步骤三：上传图片
+      // 步骤二：上传图片
       imageUrl: '',
       dialogImageUrl: '',
-      dialogVisible: false
+      dialogVisible: false,
+      fileList: [],
+      pic: {}
     }
+  },
+  created () {
+    if (window.sessionStorage.getItem('userID') === null) this.$router.push('/')
   },
   methods: {
     nextStep () {
@@ -160,29 +163,41 @@ export default {
       this.active--
     },
     submit () {
-      console.log('你好')
-    },
-    handleAvatarSuccess (res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
-    },
-    beforeAvatarUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
+      let formData = new FormData()
+      formData.append('formData', new Blob([JSON.stringify(this.formData)], {type: 'application/json'}))
+      for (let i = 0; i < this.fileList.length; i++) {
+        formData.append('files', this.fileList[i].raw)
       }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
-      return isJPG && isLt2M
+      console.log(formData.get('formData'))
+      console.log(formData.get('files'))
+      shelveBook(formData).then(res => {
+        console.log(res)
+        if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+        else {
+          this.$message({
+            message: '上传成功',
+            type: 'success'
+          })
+          location.reload()
+        }
+      }).catch(error => {
+        console.log(error)
+        this.$message.error('上传失败，请务必正确填写所有信息！！')
+      })
     },
-    handleRemove (file, fileList) {
-      console.log(file, fileList)
+    handleRemove () {
+      this.fileList.pop()
     },
-    handlePictureCardPreview (file) {
-      this.dialogImageUrl = file.url
-      this.dialogVisible = true
+    handlePreview (file) {
+      console.log(file)
+    },
+    handleChange (file) {
+      console.log(file)
+      this.fileList.push(file)
+      console.log(this.fileList.length)
+    },
+    beforeRemove (file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
     }
   }
 }
@@ -238,10 +253,6 @@ export default {
   font-size: 24px;
   text-align: center;
 }
-.form-item{
-  width: 500px;
-  margin-top: 20px;
-}
 .button{
   margin-top: 50px;
 }
@@ -259,18 +270,5 @@ export default {
 }
 .avatar-uploader .el-upload:hover {
   border-color: #409EFF;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
 }
 </style>

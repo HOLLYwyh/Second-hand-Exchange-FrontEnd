@@ -5,12 +5,14 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import VueParticles from 'vue-particles'
+import VueCookies from 'vue-cookies'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'font-awesome/css/font-awesome.min.css'
 
 import './assets/style/myStyle.css'
 Vue.use(ElementUI)
 Vue.use(VueParticles)
+Vue.use(VueCookies)
 
 Vue.config.productionTip = false
 
