@@ -124,6 +124,7 @@ export default {
           if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
           else {
             this.$message.success('修改成功！')
+            this.jumpTo('/userHome/mySecurity')
           }
         })
       }

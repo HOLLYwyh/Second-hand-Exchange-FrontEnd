@@ -20,8 +20,8 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    if (window.sessionStorage.getItem('tokenValue')) {
-      config.headers['satoken'] = window.sessionStorage.getItem('tokenValue')
+    if (sessionStorage.getItem('tokenValue')) {
+      config.headers['satoken'] = sessionStorage.getItem('tokenValue')
     }
 
     return config

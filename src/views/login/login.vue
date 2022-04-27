@@ -65,11 +65,11 @@ export default {
         if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
         else {
           this.$router.push('/index')
-          window.sessionStorage.setItem('userID', res.data.userId)
-          window.sessionStorage.setItem('userEmail', res.data.userEmail)
-          window.sessionStorage.setItem('userName', res.data.userName)
-          window.sessionStorage.setItem('tokenName', res.data.tokenName)
-          window.sessionStorage.setItem('tokenValue', res.data.tokenValue)
+          sessionStorage.setItem('userID', res.data.userId)
+          sessionStorage.setItem('userEmail', res.data.userEmail)
+          sessionStorage.setItem('userName', res.data.userName)
+          sessionStorage.setItem('tokenName', res.data.tokenName)
+          sessionStorage.setItem('tokenValue', res.data.tokenValue)
         }
       })
     }
