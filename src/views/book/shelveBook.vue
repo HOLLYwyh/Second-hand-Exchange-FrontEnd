@@ -39,7 +39,9 @@
                       </el-input>
                     </el-form-item>
                     <el-form-item label="商品种类">
-                      <el-input class="book-info-input" v-model="formData.goodsCategory" clearable></el-input>
+                      <el-select class="book-info-input" v-model="formData.goodsCategory" placeholder="请选择">
+                        <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                      </el-select>
                     </el-form-item>
                     <el-form-item label="商品简介">
                       <el-input class="book-info-input" v-model="formData.goodsIntroduction" clearable type="textarea" :rows="2"></el-input>
@@ -141,6 +143,19 @@ export default {
         sellNum: '',
         goodsIntroduction: ''
       },
+      options: [{
+        value: 'textbook',
+        label: '课本'
+      }, {
+        value: 'teachingMaterials',
+        label: '教辅资料'
+      }, {
+        value: 'extracurricularBook',
+        label: '课外书'
+      }, {
+        value: 'rests',
+        label: '其他'
+      }],
       // 步骤二：上传图片
       imageUrl: '',
       dialogImageUrl: '',

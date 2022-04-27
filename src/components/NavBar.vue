@@ -63,6 +63,11 @@ export default {
   methods: {
     search () {
       if (this.keywords === '') this.$router.push('/search')
+      else {
+        const info = this.keywords
+        this.$router.push(`/searchResult?info=${info}`)
+        location.reload()
+      }
     },
     toUserHome () {
       this.$router.push('/userHome')

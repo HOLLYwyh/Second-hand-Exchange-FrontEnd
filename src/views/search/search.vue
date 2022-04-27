@@ -26,9 +26,16 @@ export default {
       input: ''
     }
   },
+  created () {
+    if (window.sessionStorage.getItem('userID') === null) this.$router.push('/')
+  },
   methods: {
     search () {
-      console.log(this.input)
+      if (this.input === '') location.reload()
+      else {
+        const info = this.input
+        this.$router.push(`/searchResult?info=${info}`)
+      }
     }
   }
 }

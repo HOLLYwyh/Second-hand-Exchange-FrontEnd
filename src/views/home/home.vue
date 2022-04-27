@@ -17,25 +17,25 @@
         <div class="wrap">
           <div class="post-box">
             <div class="box-title">
-              <el-button type="text" class="category">{{item.name}}</el-button>
+              <el-button type="text" class="category">{{getCategoryName(item.goodsCategory)}}</el-button>
             </div>
             <div class="box-body">
               <div style="display: flex;justify-content: center">
-                <div v-for="(it, id) in goodsSizeList[index]" :key="id" class="post">
-                    <el-card class="card">
-                      <div class="book-title">{{item.bookList[goodsIndexList[index]+id].name}}</div>
-                      <img :src=item.bookList[goodsIndexList[index]+id].img alt="这是一张图片" class="book-img">
-                      <el-button type="text" class="book-button">查看详情</el-button>
+                <div v-for="(it, id) in goodsSizeList[index]" :key="id" class="post" @click="goToBook(item.bookList[goodsIndexList[index]+id].goodsId)">
+                    <el-card class="card" shadow="hover">
+                      <div class="book-title">{{ item.bookList[goodsIndexList[index]+id].goodsName}}</div>
+                      <img :src=item.bookList[goodsIndexList[index]+id].goodsImage alt="这是一张图片" class="book-img">
+                      <div>售价：￥ {{item.bookList[goodsIndexList[index]+id].goodsPrice}}</div>
+                        <div>剩余：{{item.bookList[goodsIndexList[index]+id].sellNum}}</div>
                     </el-card>
                 </div>
               </div>
               <!--底部翻页栏-->
               <div class="pagination">
-                <el-pagination
-                  layout="prev, pager, next"
-                  :page-size="4"
-                  :total=item.bookList.length>
-                </el-pagination>
+                <!--这里需要优化一下-->
+                <el-pagination v-if="goodsSizeList[index]>=pageSize||pageChangeList[index]" layout="prev, pager, next" :page-size="pageSize"
+                               :total=5 :current-page.sync="pageNumberList[index].number" :page-count="7"
+                               @current-change="turnPage(index, pageNumberList[index].number, item.goodsCategory)"></el-pagination>
               </div>
             </div>
           </div>
@@ -52,6 +52,7 @@ import { swiperList } from '../../assets/data/swiper'
 import BackToTop from '../../components/BackToTop'
 import Particles from '../../components/Particles'
 import NavBar from '../../components/NavBar'
+import { getBookAPI } from '../../api/Home/home'
 
 export default {
   name: 'Home',
@@ -65,15 +66,57 @@ export default {
   data () {
     return {
       swiperList: swiperList,
-      // TODO:和后端协同交流之后再确定具体细节，此为临时Demo
-      goodsList: [
-        {name: '课本', bookList: [{img: require('@/assets/temp/temp1.jpg'), name: '算法导论', introduction: ''}, {img: require('@/assets/temp/temp2.jpg'), name: '操作系统概念', introduction: ''}, {img: require('@/assets/temp/temp3.jpg'), name: '计算机网络', introduction: ''}, {img: require('@/assets/temp/temp4.jpg'), name: '离散数学', introduction: ''}]},
-        {name: '教辅资料', bookList: [{img: '', name: '计算机网络实验教程', introduction: ''}, {img: '', name: '王道考验', introduction: ''}, {img: '', name: '高数学解', introduction: ''}, {img: '', name: '物理实验辅导', introduction: ''}]},
-        {name: '课外阅读', bookList: [{img: '', name: '活着', introduction: ''}, {img: '', name: '白鹿原', introduction: ''}, {img: '', name: '平凡的世界', introduction: ''}, {img: '', name: '黄金时代', introduction: ''}]},
-        {name: '其他', bookList: [{img: '', name: '领域驱动设计', introduction: ''}, {img: '', name: 'STL源码剖析', introduction: ''}, {img: '', name: '程序员修炼之道', introduction: ''}, {img: '', name: '代码整洁之道', introduction: ''}]}
-      ],
-      goodsIndexList: [0, 0, 0, 0],
-      goodsSizeList: [4, 4, 4, 4]
+      goodsList: [],
+      goodsIndexList: [],
+      goodsSizeList: [],
+      pageNumberList: [],
+      pageChangeList: [],
+      pageSize: 4
+    }
+  },
+  created () {
+    if (window.sessionStorage.getItem('userID') === null) this.$router.push('/')
+    this.getBooks()
+  },
+  methods: {
+    getBooks () {
+      let params = { 'goodsCategory': 'all', 'pageNumber': 0, 'pageSize': this.pageSize }
+      getBookAPI(params).then(res => {
+        if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+        else {
+          this.goodsList = res.data
+          for (let i = 0; i < this.goodsList.length; i++) {
+            this.goodsSizeList.push(this.goodsList[i].bookList.length)
+            this.goodsIndexList.push(0)
+            this.pageNumberList.push({number: 1})
+            this.pageChangeList.push(false)
+          }
+        }
+      })
+    },
+    getCategoryName (category) {
+      if (category === 'textbook') return '课本'
+      else if (category === 'teachingMaterials') return '教辅资料'
+      else if (category === 'extracurricularBook') return '课外书'
+      else if (category === 'rests') return '其他'
+      else return '暂无'
+    },
+    goToBook (goodsId) {
+      this.$router.push(`/bookDetail?id=${goodsId}`)
+    },
+    turnPage (index, pageNumber, category) {
+      console.log(index)
+      let params = { 'goodsCategory': category, 'pageNumber': pageNumber - 1, 'pageSize': this.pageSize }
+      getBookAPI(params).then(res => {
+        if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+        else {
+          this.goodsList[index] = res.data[0]
+          console.log(res.data[0])
+          this.goodsSizeList[index] = this.goodsList[index].bookList.length
+          this.pageChangeList[index] = true
+          this.$forceUpdate()
+        }
+      })
     }
   }
 }
@@ -136,10 +179,9 @@ export default {
 .book-img{
   display: flex;
   flex-direction: column;
-  margin-left: 50px;
-  margin-top: 20px;
-}
-.book-button{
+  margin-left: 47px;
   margin-top: 10px;
+  width: 130px;
+  height: 150px;
 }
 </style>

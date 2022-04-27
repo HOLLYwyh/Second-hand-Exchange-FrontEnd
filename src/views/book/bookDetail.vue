@@ -7,24 +7,24 @@
         <!--商品图标-->
         <div class="book-top-card">
           <div class="book-img-wrap">
-            <img :src="bookInfo.url" alt="">
+            <img :src="details.goodsImages[0]" alt="商品图片">
           </div>
           <div class="book-info">
             <div class="book-name">
-              <div class="tag1">{{bookType}}</div>{{bookInfo.name}}
+              <div class="tag1">{{getCategoryName(details.goodsCategory)}}</div>{{details.goodsName}}
               <div class="el-icon-star-on" v-show="favoriteVisible"></div>
               <div class="el-icon-star-off" v-show="cancelFavoriteVisible"></div>
               <img src="../../assets/detailIcon/ContactService.png" alt="联系客服" style="width: 30px;height: 30px">
             </div>
             <div class="book-user-info">
               <div class="book-create-time">
-                <span>共{{comments.length}}条评论</span>
+                <span>共{{details.goodsFavorite}}人点赞</span>
               </div>
             </div>
             <div>
-              <el-card style="margin-top: 10px;max-height: 140px;background: transparent">
+              <el-card style="margin-top: 10px;max-height: 140px;background: transparent;text-justify: inter-ideograph;overflow: auto;">
                 <div style="color: #6A5ACD">商品简介</div>
-                <div>{{bookInfo.introduction.slice(0,140)}}...</div>
+                <div>{{details.goodsIntroduction}}</div>
               </el-card>
             </div>
           </div>
@@ -55,19 +55,44 @@
 <script>
 import NavBar from '../../components/NavBar'
 import Particles from '../../components/Particles'
+import {bookDetail} from '../../api/book/bookDetail'
 
 export default {
   name: 'bookDetail',
   components: {NavBar, Particles},
   data () {
     return {
-      // TODO:此处可能需要再次修改
-      bookType: '课本',
+      details: {},
       favoriteVisible: false,
       cancelFavoriteVisible: true,
-      bookInfo: {name: '算法导论', introduction: '计算机相关专业必读书籍，坐标嘉定校区，八成新', url: require('@/assets/temp/temp1.jpg')},
-      detailInfo: [{index: 1, title: '提供者', content: '1953608'}, {index: 2, title: '价格', content: '50￥'}, {index: 3, title: '联系方式', content: '19821229038'}],
-      comments: []
+      detailInfo: []
+    }
+  },
+  created () {
+    if (window.sessionStorage.getItem('userID') === null) this.$router.push('/')
+    let id = 0
+    if (this.$route.query.id === undefined) id = 7
+    else id = this.$route.query.id
+    const params = {'goodsId': id}
+    bookDetail(params).then(res => {
+      if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+      else {
+        this.details = res.data
+        console.log(res.data)
+        // TODO 这里还要获取人的卖货者的姓名,这里还要修改一下
+        this.detailInfo.push({index: 1, title: '提供者', content: res.data.userId}, {index: 2, title: '价格', content: res.data.goodsPrice + '￥'},
+          {index: 3, title: '联系方式', content: '19821229038'}, {index: 4, title: '上架时间', content: res.data.goodsDate.substring(0, 10)},
+          {index: 5, title: '剩余数量', content: res.data.sellNum})
+      }
+    })
+  },
+  methods: {
+    getCategoryName (category) {
+      if (category === 'textbook') return '课本'
+      else if (category === 'teachingMaterials') return '教辅资料'
+      else if (category === 'extracurricularBook') return '课外书'
+      else if (category === 'rests') return '其他'
+      else return '暂无'
     }
   }
 }

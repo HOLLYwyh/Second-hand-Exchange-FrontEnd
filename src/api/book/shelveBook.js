@@ -1,7 +1,6 @@
 import request from '@/utils/request'
 
 export function shelveBook (params) {
-  // const tokenValue = window.sessionStorage.getItem('tokenValue')
   return request({
     url: '/goods/add',
     method: 'post',
