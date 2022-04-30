@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="Img_Box">
-      <img src="../../assets/login/background.jpg" width="100%" height="100%"  alt="background"/>
+      <img src="../../assets/login/bg.png" width="100%" height="100%"  alt="background"/>
     </div>
     <div style="vertical-align: middle">
       <el-card  class="Login_Card" style="border-radius: 12px">
