@@ -8,24 +8,15 @@
         <el-table element-loading-text="正在为您拼命加载中..." :data="addresses" ref="multipleTable" style="width: 100%"
                   :close-on-click-modal="false" :close-on-press-escape="false"
                   :header-cell-style="{background:'#f8f8f8',color:'#999'}">
-          <el-table-column prop="province" align="center" width="150" label="省份">
+          <el-table-column prop="campus" align="center" width="150" label="校区">
             <template slot-scope="scope">
-              {{scope.row.province}}
+              {{scope.row.campus}}
             </template>
           </el-table-column>
-          <el-table-column prop="city" align="center" label="城市">
+
+          <el-table-column prop="detail" label="详细地址" align="center">
             <template slot-scope="scope">
-              <span class="shop">{{scope.row.city}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="county" label="县区" align="center">
-            <template slot-scope="scope">
-              <span class="price">{{scope.row.area}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="address" label="详细地址" align="center">
-            <template slot-scope="scope">
-              <span class="price">{{scope.row.address}}</span>
+              <span class="price">{{scope.row.detail}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="name" label="收货人" align="center">
@@ -58,19 +49,17 @@
           <el-row>
             <h3>收货地址</h3>
             <el-row >
-              <distpicker :placeholders="placeholders"
-                          :province="input.province"
-                          :city="input.city"
-                          :area="input.area"
-                          @province="selectProvince"
-                          @city="selectCity"
-                          @area="selectArea"
-                          @selected="onSelected"></distpicker>
+              <div>
+                <el-radio-group v-model="input.campus">
+                  <el-radio-button label="同济大学嘉定校区"></el-radio-button>
+                  <el-radio-button label="同济大学四平校区"></el-radio-button>
+                </el-radio-group>
+              </div>
             </el-row>
             <br />
             <el-row class="margin-inner-style">
               详细地址：
-              <el-input style="width: 80%" v-model="input.address"></el-input>
+              <el-input style="width: 80%" v-model="input.detail"></el-input>
             </el-row>
           </el-row>
           <el-row>
@@ -98,27 +87,19 @@
 
 <script>
 import BreadCrumb from '../../components/BreadCrumb'
-import distpicker from '../../components/dispicker/distpicker'
+import {addAddress, getAddress} from '../../api/address/address'
 
 export default {
   name: 'myAddress',
   components: {
-    BreadCrumb,
-    distpicker
+    BreadCrumb
   },
   data () {
     return {
       addresses: [],
-      placeholders: {
-        province: '------- 省 --------',
-        city: '--- 市 ---',
-        area: '--- 区 ---'
-      },
       input: {
-        province: '',
-        city: '',
-        area: '',
-        address: '',
+        campus: '',
+        detail: '',
         name: '',
         phone: ''
       },
@@ -157,38 +138,48 @@ export default {
         .catch(_ => {})
     },
     addAddress () {
-      this.addresses.push(this.input)
-      console.log(this.input)
-      this.dialogVisible = false
-      this.input = {
-        province: '------- 省 --------',
-        city: '--- 市 ---',
-        area: '--- 区 ---',
-        address: '',
-        name: '',
-        phone: ''
+      if (this.input.detail === '' || this.input.campus === '' || this.input.detail === '' || this.input.phone === '') {
+        this.$message.error('请填写完整信息！')
+        return
       }
+      if (this.input.phone.length !== 11) {
+        this.$message.error('请填写正确手机号！')
+        return
+      }
+      const params = {'campus': this.input.campus, 'detail': this.input.detail, 'phone': this.input.phone, 'name': this.input.name}
+      addAddress(params).then(res => {
+        if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+        else {
+          this.$message.success('添加成功！')
+          this.addresses.push(this.input)
+          this.dialogVisible = false
+          this.input = {
+            campus: '',
+            detail: '',
+            name: '',
+            phone: ''
+          }
+        }
+      })
     },
     cancelAddress () {
       this.dialogVisible = false
       this.input = {
-        province: '------- 省 --------',
-        city: '--- 市 ---',
-        area: '--- 区 ---',
-        address: '',
+        campus: '',
+        detail: '',
         name: '',
         phone: ''
       }
-    },
-    selectProvince (value) {
-      this.input.province = value.value
-    },
-    selectCity (value) {
-      this.input.city = value.value
-    },
-    selectArea (value) {
-      this.input.area = value.value
     }
+  },
+  mounted () {
+    getAddress().then(res => {
+      if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+      else {
+        this.addresses = res.data
+        console.log(res)
+      }
+    })
   }
 }
 </script>

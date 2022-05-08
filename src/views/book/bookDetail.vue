@@ -30,7 +30,7 @@
           </div>
         </div>
         <div style="margin-top: 20px;display: flex;justify-content: center">
-          <el-button type="success">加入购物车</el-button>
+          <el-button type="success" @click="addCart()">加入购物车</el-button>
           <el-button type="primary">立即购买</el-button>
         </div>
         <!--商品信息-->
@@ -56,6 +56,7 @@
 import NavBar from '../../components/NavBar'
 import Particles from '../../components/Particles'
 import {bookDetail} from '../../api/book/bookDetail'
+import {addCart} from '../../api/cart/cart'
 
 export default {
   name: 'bookDetail',
@@ -93,6 +94,17 @@ export default {
       else if (category === 'extracurricularBook') return '课外书'
       else if (category === 'rests') return '其他'
       else return '暂无'
+    },
+    addCart () {
+      let id
+      id = this.$route.query.id
+      const params = {'goodsId': id, 'count': 1}
+      addCart(params).then(res => {
+        if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+        else {
+          this.$message.success('添加成功！')
+        }
+      })
     }
   }
 }
