@@ -12,28 +12,28 @@
               <img :src="scope.row.image" class="shopImg" alt="">
             </template>
           </el-table-column>
-          <el-table-column prop="shop" align="center">
+          <el-table-column prop="goodsName" align="center">
             <template slot-scope="scope">
               <span class="shop">{{scope.row.goodsName}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="price" label="单价" align="center">
+          <el-table-column prop="goodsPrice" label="单价" align="center">
             <template slot-scope="scope">
               <span class="price">¥{{scope.row.goodsPrice}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="number" label="数量" align="center">
+          <el-table-column prop="count" label="数量" align="center">
             <template slot-scope="scope">
               <el-input v-model.number="scope.row.count" oninput="value=value.replace(/[^\d]/g,'')" autocomplete="off" style="width:140px" size="mini"
                         @change="handleInput(scope.row)">
                 <el-button size="mini" slot="prepend" @click="del(scope.row)"><i class="el-icon-minus"></i></el-button>
-                <el-button slot="append" size="mini" @click="add(scope.row)"><i class="el-icon-plus"></i></el-button>
+                <el-button slot="append" size="mini"  @click="add(scope.row)"><i class="el-icon-plus"></i></el-button>
               </el-input>
             </template>
           </el-table-column>
           <el-table-column prop="count" label="小计" align="center">
             <template slot-scope="scope">
-              <span class="count">¥{{scope.row.goodTotal}}</span>
+              <span class="count">¥{{scope.row.totalPrice}}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center">
@@ -42,7 +42,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-divider>总价 : {{totalPrice}}</el-divider>
+        <el-divider>总价 : {{price}}</el-divider>
         <div style="margin-top: 30px">
           <el-button @click="submitCart" type="primary">结算</el-button>
         </div>
@@ -65,7 +65,7 @@ export default {
     return {
       multipleSelection: [],
       items: [],
-      totalPrice: 0,
+      price: 0,
       checkItem: []
     }
   },
@@ -96,44 +96,45 @@ export default {
     },
     // 数量变化触发
     handleInput (value) {
-      console.log(value)
-      if (value.number == null || value.number === '' || value.number === 0) {
-        value.number = 1
+      if (value.count == null || value.count === '' || value.count === 0) {
+        value.count = 1
       }
-      value.goodTotal = (value.number * value.price).toFixed(2)// 保留两位小数
+      value.totalPrice = (value.count * value.price).toFixed(2)// 保留两位小数
       // 增加商品数量也需要重新计算商品总价
       this.handleCheckedChange(this.multipleSelection)
     },
     add (addGood) {
       // 输入框输入值变化时会变为字符串格式返回到js
       // 此处要用v-model，实现双向数据绑定
-      if (typeof addGood.number === 'string') {
-        addGood.number = parseInt(addGood.number)
-      };
-      addGood.number += 1
-      addGood.goodTotal = (addGood.number * addGood.price).toFixed(2)// 保留两位小数
-      this.handleCheckedChange(this.multipleSelection)
+      if (typeof addGood.count === 'string') {
+        addGood.count = parseInt(addGood.count)
+      }
+      if (addGood.count < addGood.sellNum) {
+        addGood.count += 1
+        addGood.totalPrice = (addGood.count * addGood.goodsPrice).toFixed(2)// 保留两位小数
+        this.handleCheckedChange(this.multipleSelection)
+      }
     },
     del (delGood) {
-      if (typeof delGood.number === 'string') {
-        delGood.number = parseInt(delGood.number)
+      if (typeof delGood.count === 'string') {
+        delGood.count = parseInt(delGood.count)
       };
-      if (delGood.number > 1) {
-        delGood.number -= 1
-        delGood.goodTotal = (delGood.number * delGood.price).toFixed(2)// 保留两位小数
+      if (delGood.count > 1) {
+        delGood.count -= 1
+        delGood.totalPrice = (delGood.count * delGood.goodsPrice).toFixed(2)// 保留两位小数
         this.handleCheckedChange(this.multipleSelection)
       }
     },
     handleCheckedChange (selection) {
       this.multipleSelection = selection
-      this.totalPrice = 0
+      this.price = 0
       // 此处不支持forEach循环，只能用原始方法了
       for (var i = 0; i < selection.length; i++) {
         // 判断返回的值是否是字符串
-        if (typeof selection[i].goodTotal === 'string') {
-          selection[i].goodTotal = parseInt(selection[i].goodTotal)
-        };
-        this.totalPrice += selection[i].goodTotal
+        if (typeof selection[i].totalPrice === 'string') {
+          selection[i].totalPrice = parseInt(selection[i].totalPrice)
+        }
+        this.price += selection[i].totalPrice
       }
     },
     submitCart () {
@@ -143,7 +144,6 @@ export default {
   mounted () {
     getCart().then(res => {
       this.items = res.data
-      console.log(this.items)
     })
   }
 }
