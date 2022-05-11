@@ -15,3 +15,21 @@ export function getAddress (params) {
     method: 'get'
   })
 }
+
+export function delAddress (params) {
+  return request({
+    url: 'address/delete',
+    method: 'post',
+    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    data: JSON.stringify(params)
+  })
+}
+
+export function updateAddress (params) {
+  return request({
+    url: 'address/update',
+    method: 'post',
+    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    data: JSON.stringify(params)
+  })
+}

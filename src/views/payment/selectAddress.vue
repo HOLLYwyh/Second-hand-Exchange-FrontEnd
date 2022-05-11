@@ -11,24 +11,14 @@
                   @current-change="handleCurrentChange"
                   :close-on-click-modal="false" :close-on-press-escape="false"
                   :header-cell-style="{background:'#f8f8f8',color:'#999'}">
-          <el-table-column prop="province" align="center" width="150" label="省份">
+          <el-table-column prop="campus" align="center" width="150" label="校区">
             <template slot-scope="scope">
-              {{scope.row.province}}
+              {{scope.row.campus}}
             </template>
           </el-table-column>
-          <el-table-column prop="city" align="center" label="城市">
+          <el-table-column prop="detail" align="center" label="详细地址">
             <template slot-scope="scope">
-              <span class="shop">{{scope.row.city}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="county" label="县区" align="center">
-            <template slot-scope="scope">
-              <span class="price">{{scope.row.area}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="address" label="详细地址" align="center">
-            <template slot-scope="scope">
-              <span class="price">{{scope.row.address}}</span>
+              <span class="shop">{{scope.row.detail}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="name" label="收货人" align="center">
@@ -57,18 +47,17 @@
           <el-row>
             <h3>收货地址</h3>
             <el-row >
-              <distpicker :placeholders="placeholders"
-                          :province="input.province"
-                          :city="input.city"
-                          :area="input.area"
-                          @province="selectProvince"
-                          @city="selectCity"
-                          @area="selectArea"></distpicker>
+              <div>
+                <el-radio-group v-model="input.campus">
+                  <el-radio-button label="同济大学嘉定校区"></el-radio-button>
+                  <el-radio-button label="同济大学四平校区"></el-radio-button>
+                </el-radio-group>
+              </div>
             </el-row>
             <br />
             <el-row class="margin-inner-style">
               详细地址：
-              <el-input style="width: 80%" v-model="input.address"></el-input>
+              <el-input style="width: 80%" v-model="input.detail"></el-input>
             </el-row>
           </el-row>
           <el-row>
@@ -96,57 +85,27 @@
 </template>
 
 <script>
-import distpicker from '../../components/dispicker/distpicker'
 import BreadCrumb from '../../components/BreadCrumb'
+import {addAddress, delAddress, getAddress, updateAddress} from '../../api/address/address'
 
 export default {
   name: 'selectAddress',
   components: {
-    BreadCrumb,
-    distpicker
+    BreadCrumb
   },
   data () {
     return {
       addresses: [
-        {
-          province: '北京市',
-          city: '北京市',
-          area: '东城区',
-          address: '曹安公路4800号',
-          name: '梁xy',
-          phone: '18868629263'
-        },
-        {
-          province: '北京市',
-          city: '北京市',
-          area: '西城区',
-          address: '南翔公路4800号',
-          name: '梁xy',
-          phone: '18868629263'
-        },
-        {
-          province: '上海市',
-          city: '上海市',
-          area: '嘉定区',
-          address: '曹安公路4800号',
-          name: '梁xy',
-          phone: '18868629263'
-        }
       ],
-      placeholders: {
-        province: '------- 省 --------',
-        city: '--- 市 ---',
-        area: '--- 区 ---'
-      },
+      edit: false,
       input: {
-        province: '',
-        city: '',
-        area: '',
-        address: '',
+        campus: '',
+        detail: '',
         name: '',
         phone: ''
       },
-      dialogVisible: false
+      dialogVisible: false,
+      currentRow: null
     }
   },
   methods: {
@@ -157,10 +116,15 @@ export default {
         type: 'warning'
       }).then(() => {
         // 删除数组中指定的元素
-        this.addresses.splice(index, 1)
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        delAddress({'addressId': row.addressId}).then(res => {
+          if (res.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+          else {
+            this.addresses.splice(index, 1)
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          }
         })
       }).catch(() => {
         this.$message({
@@ -172,6 +136,7 @@ export default {
     eidtAddress (index, row) {
       this.input = row
       this.dialogVisible = true
+      this.edit = true
     },
     handleClose (done) {
       this.$confirm('确认关闭？')
@@ -181,45 +146,95 @@ export default {
         .catch(_ => {})
     },
     addAddress () {
-      this.addresses.push(this.input)
-      console.log(this.input)
-      this.dialogVisible = false
-      this.input = {
-        province: '------- 省 --------',
-        city: '--- 市 ---',
-        area: '--- 区 ---',
-        address: '',
-        name: '',
-        phone: ''
+      if (this.input.detail === '' || this.input.campus === '' || this.input.detail === '' || this.input.phone === '') {
+        this.$message.error('请填写完整信息！')
+        return
+      }
+      if (this.input.phone.length !== 11) {
+        this.$message.error('请填写正确手机号！')
+        return
+      }
+      if (!this.edit) {
+        const params = {
+          'campus': this.input.campus,
+          'detail': this.input.detail,
+          'phone': this.input.phone,
+          'name': this.input.name
+        }
+        addAddress(params).then(res => {
+          if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+          else {
+            this.$message.success('添加成功！')
+            this.addresses.push(this.input)
+            this.dialogVisible = false
+            this.input = {
+              campus: '',
+              detail: '',
+              name: '',
+              phone: ''
+            }
+          }
+        })
+      } else {
+        const params = {
+          'addressId': this.input.addressId,
+          'campus': this.input.campus,
+          'detail': this.input.detail,
+          'phone': this.input.phone,
+          'name': this.input.name
+        }
+        updateAddress(params).then(res => {
+          if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+          else {
+            this.$message.success('修改成功！')
+            this.dialogVisible = false
+            this.input = {
+              campus: '',
+              detail: '',
+              name: '',
+              phone: ''
+            }
+            this.edit = false
+          }
+        })
       }
     },
     cancelAddress () {
       this.dialogVisible = false
       this.input = {
-        province: '------- 省 --------',
-        city: '--- 市 ---',
-        area: '--- 区 ---',
-        address: '',
+        campus: '',
+        detail: '',
         name: '',
         phone: ''
       }
-    },
-    selectProvince (value) {
-      this.input.province = value.value
-    },
-    selectCity (value) {
-      this.input.city = value.value
-    },
-    selectArea (value) {
-      this.input.area = value.value
+      this.edit = false
     },
     handleCurrentChange (val) {
       this.currentRow = val
     },
     jumpTo (path) {
-      // console.log(path)
+      if (this.currentRow === null) {
+        this.$message.error('请选择地址！')
+        return
+      }
+      var orderGoodList = JSON.parse(localStorage.getItem('orderGoodList'))
+
+      for (var i = 0; i < orderGoodList.length; i++) {
+        orderGoodList[i].addressId = this.currentRow.addressId
+      }
+      localStorage.setItem('orderGoodList', JSON.stringify(orderGoodList))
+      localStorage.setItem('orderAddress', JSON.stringify(this.currentRow))
+
       this.$router.replace({path: path})
     }
+  },
+  mounted () {
+    getAddress().then(res => {
+      if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+      else {
+        this.addresses = res.data
+      }
+    })
   }
 }
 </script>

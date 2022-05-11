@@ -56,6 +56,7 @@
 <script>
 import BreadCrumb from '../../components/BreadCrumb'
 import {getCart} from '../../api/cart/cart'
+
 export default {
   name: 'myChart',
   components: {
@@ -70,9 +71,8 @@ export default {
     }
   },
   methods: {
-    createOder (args) {
-      this.multipleSelection = args
-      // console.log(this.multipleSelection)
+    createOder () {
+      localStorage.setItem('orderGoodList', JSON.stringify(this.multipleSelection))
       this.$router.push('/createOrder')
     },
     handleDelete (index, row) {
@@ -126,6 +126,7 @@ export default {
       }
     },
     handleCheckedChange (selection) {
+      console.log(selection)
       this.multipleSelection = selection
       this.price = 0
       // 此处不支持forEach循环，只能用原始方法了
@@ -138,12 +139,13 @@ export default {
       }
     },
     submitCart () {
-      this.$emit('createOrder', this.multipleSelection)
+      this.createOder()
     }
   },
   mounted () {
     getCart().then(res => {
       this.items = res.data
+      console.log(this.items)
     })
   }
 }

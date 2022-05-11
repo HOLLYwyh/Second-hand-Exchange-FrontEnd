@@ -2,14 +2,30 @@
   <div>
     <div>
       <div>
-        <BreadCrumb></BreadCrumb>
-      </div>
-      <div>
-      </div>
+        <div>
+        </div>
         <div class="margin-style">
+          <div style="border-color: gray;border-radius: 10px;border-style: solid" v-if="data[0].status === 1">
+            <div style="padding: 20px">
+              <el-tag type="danger" style="float: left;font-size: large">未收货</el-tag>
+              <p>本网站不提供金钱交易功能，请买家与商家联系，明确线下交易信息哦！</p>
+            </div>
+          </div>
+          <div style="border-color: gray;border-radius: 10px;border-style: solid" v-if="data[0].status === 2">
+            <div style="padding: 20px">
+              <el-tag type="success" style="float: left;font-size: large">已收货</el-tag>
+              <p>买家已收货！请检查线下交易是否成功！</p>
+            </div>
+          </div>
+          <div style="border-color: gray;border-radius: 10px;border-style: solid" v-if="data[0].status === 0">
+            <div style="padding: 20px">
+              <el-tag type="warning" style="float: left;font-size: large">已取消</el-tag>
+              <p>订单已取消，祝您一切愉快！</p>
+            </div>
+          </div>
           <br />
           <el-divider><h4>收货地址</h4></el-divider>
-          <el-table element-loading-text="正在为您拼命加载中..." :data="addresses" style="width: 100%"
+          <el-table element-loading-text="正在为您拼命加载中..." :data="data" style="width: 100%"
                     :close-on-click-modal="false" :close-on-press-escape="false"
                     :header-cell-style="{background:'#f8f8f8',color:'#999'}">
             <el-table-column prop="campus" align="center" width="150" label="校区">
@@ -36,17 +52,12 @@
           <br />
           <el-divider><h4>商品列表</h4></el-divider>
           <br />
-          <el-table element-loading-text="正在为您拼命加载中..." :data="items" ref="multipleTable" style="width: 100%"
+          <el-table element-loading-text="正在为您拼命加载中..." :data="data" ref="multipleTable" style="width: 100%"
                     :close-on-click-modal="false" :close-on-press-escape="false"
                     :header-cell-style="{background:'#f8f8f8',color:'#999'}">
-            <el-table-column prop="image" align="center" width="150" label="商品">
+            <el-table-column prop="goodsImages" align="center" width="150" label="商品">
               <template slot-scope="scope">
-                <img :src="scope.row.image" class="shopImg" alt="">
-              </template>
-            </el-table-column>
-            <el-table-column prop="shop" align="center">
-              <template slot-scope="scope">
-                <span class="shop">{{scope.row.shop}}</span>
+                <img :src="scope.row.goodsImages[0]" class="shopImg" alt="">
               </template>
             </el-table-column>
             <el-table-column prop="goodsName" align="center">
@@ -71,66 +82,53 @@
             </el-table-column>
           </el-table>
 
-          <el-divider>总价 : {{price}} 元 </el-divider>
+          <el-divider><h4>详细信息</h4></el-divider>
+          <el-table element-loading-text="正在为您拼命加载中..." :data="data" ref="multipleTable" style="width: 100%"
+                    :close-on-click-modal="false" :close-on-press-escape="false"
+                    :header-cell-style="{background:'#f8f8f8',color:'#999'}">
+            <el-table-column prop="orderId" align="center" label="订单编号">
+              <template slot-scope="scope">
+                <span class="shop">{{scope.row.orderId}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="orderDate" align="center" label="创建时间">
+              <template slot-scope="scope">
+                <span class="shop">{{scope.row.orderDate}}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+
         </div>
-      <br />
-      <el-button type="primary" @click="createOrder()"> 结 算 </el-button>
+        <br />
+        <el-button type="primary"> 联系卖家 </el-button>
+        <el-button type="primary"> 投诉卖家 </el-button>
+        <br />
 
       </div>
     </div>
+  </div>
 </template>
 
 <script>
-import NavBar from '../../components/NavBar'
 import BreadCrumb from '../../components/BreadCrumb'
-import {addOrder} from '../../api/order/order'
+import {getOrderDetail} from '../../api/order/order'
+
 export default {
-  name: 'createOrder',
+  name: 'orderDetail',
   components: {
-    NavBar,
     BreadCrumb
   },
   data () {
     return {
-      radio: 0,
-      price: 0,
-      items: [],
-      addresses: []
-    }
-  },
-  methods: {
-    jumpTo (path) {
-      // console.log(path)
-      this.$router.replace({path: path})
-    },
-    createOrder () {
-      // localStorage.removeItem('orderAddress')
-      localStorage.removeItem('orderGoodList')
-      var successList = this.items
-      addOrder({'orderItemList': this.items}).then(res => {
-        if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
-        else {
-          if (res.data.length !== 0) {
-            for (var i = 0; i < res.data.length; i++) {
-              var item = successList.find(item_ => item_.goodsId === res.data[i].goodsId)
-              item.status = 0
-              console.log(item)
-            }
-          }
-          localStorage.setItem('ordersSccessList', JSON.stringify(successList))
-
-          this.jumpTo('/createOrder/result')
-        }
-      })
+      data: []
     }
   },
   mounted () {
-    this.addresses = []
-    this.addresses.push(JSON.parse(localStorage.getItem('orderAddress')))
-    this.items = JSON.parse(localStorage.getItem('orderGoodList'))
-    for (var i = 0; i < this.items.length; i++) {
-      this.price += this.items[i].totalPrice
-    }
+    getOrderDetail({'orderId': this.$route.params.orderId}).then(res => {
+      this.data.push(res.data)
+      console.log(this.data)
+    })
+    // console.log('hello')
   }
 }
 </script>

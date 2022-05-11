@@ -31,7 +31,16 @@ export default new Router({
           path: '/userHome/myOrder',
           name: 'myOrder',
           component: () => import('@/views/userHome/myOrder'),
-          meta: {title: '我的订单'}},
+          meta: {title: '我的订单'},
+          children: [
+            {
+              path: '/userHome/order/:orderId',
+              name: 'orderDetail',
+              component: () => import('@/views/payment/orderDetail'),
+              meta: {title: '订单详情'}
+            }
+          ]
+        },
         {
           path: '/userHome/myChart',
           name: 'myChart',
@@ -48,7 +57,14 @@ export default new Router({
                 name: 'createOrder',
                 component: () => import('@/views/payment/createOrder'),
                 meta: {title: '创建订单'}
-              }]
+              },
+              {
+                path: '/createOrder/result',
+                name: 'createOrder',
+                component: () => import('@/views/payment/createOrderResult'),
+                meta: {title: '创建订单结果'}
+              }
+              ]
             }
           ]},
         {

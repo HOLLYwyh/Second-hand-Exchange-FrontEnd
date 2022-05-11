@@ -87,7 +87,7 @@
 
 <script>
 import BreadCrumb from '../../components/BreadCrumb'
-import {addAddress, getAddress} from '../../api/address/address'
+import {addAddress, delAddress, getAddress, updateAddress} from '../../api/address/address'
 
 export default {
   name: 'myAddress',
@@ -96,6 +96,7 @@ export default {
   },
   data () {
     return {
+      edit: false,
       addresses: [],
       input: {
         campus: '',
@@ -114,10 +115,15 @@ export default {
         type: 'warning'
       }).then(() => {
         // 删除数组中指定的元素
-        this.addresses.splice(index, 1)
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        delAddress({'addressId': row.addressId}).then(res => {
+          if (res.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+          else {
+            this.addresses.splice(index, 1)
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          }
         })
       }).catch(() => {
         this.$message({
@@ -129,6 +135,7 @@ export default {
     eidtAddress (index, row) {
       this.input = row
       this.dialogVisible = true
+      this.edit = true
     },
     handleClose (done) {
       this.$confirm('确认关闭？')
@@ -146,21 +153,50 @@ export default {
         this.$message.error('请填写正确手机号！')
         return
       }
-      const params = {'campus': this.input.campus, 'detail': this.input.detail, 'phone': this.input.phone, 'name': this.input.name}
-      addAddress(params).then(res => {
-        if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
-        else {
-          this.$message.success('添加成功！')
-          this.addresses.push(this.input)
-          this.dialogVisible = false
-          this.input = {
-            campus: '',
-            detail: '',
-            name: '',
-            phone: ''
-          }
+      if (!this.edit) {
+        const params = {
+          'campus': this.input.campus,
+          'detail': this.input.detail,
+          'phone': this.input.phone,
+          'name': this.input.name
         }
-      })
+        addAddress(params).then(res => {
+          if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+          else {
+            this.$message.success('添加成功！')
+            this.addresses.push(this.input)
+            this.dialogVisible = false
+            this.input = {
+              campus: '',
+              detail: '',
+              name: '',
+              phone: ''
+            }
+          }
+        })
+      } else {
+        const params = {
+          'addressId': this.input.addressId,
+          'campus': this.input.campus,
+          'detail': this.input.detail,
+          'phone': this.input.phone,
+          'name': this.input.name
+        }
+        updateAddress(params).then(res => {
+          if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
+          else {
+            this.$message.success('修改成功！')
+            this.dialogVisible = false
+            this.input = {
+              campus: '',
+              detail: '',
+              name: '',
+              phone: ''
+            }
+            this.edit = false
+          }
+        })
+      }
     },
     cancelAddress () {
       this.dialogVisible = false
@@ -170,6 +206,7 @@ export default {
         name: '',
         phone: ''
       }
+      this.edit = false
     }
   },
   mounted () {
