@@ -47,7 +47,7 @@ export default {
           href: '#/'
         },
         {
-          name: '收藏夹'
+          name: '求物'
         },
         {
           name: '购物车',

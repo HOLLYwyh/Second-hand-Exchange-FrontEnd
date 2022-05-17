@@ -8,7 +8,7 @@ export default new Router({
     {
       path: '/index',
       name: 'Home',
-      component: () => import('@/views/home/home')
+      component: () => import('@/views/home/home1')
     }, {
       path: '/',
       name: 'Login',
@@ -21,6 +21,10 @@ export default new Router({
       path: '/forgetPassword',
       name: 'ForgetPassword',
       component: () => import('@/views/register/forgetPassword')
+    }, {
+      path: '/goods',
+      name: 'Goods',
+      component: () => import('@/views/book/goods')
     }, {
       path: '/userHome',
       name: 'userHome',
