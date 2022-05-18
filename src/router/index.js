@@ -8,7 +8,7 @@ export default new Router({
     {
       path: '/index',
       name: 'Home',
-      component: () => import('@/views/home/home1')
+      component: () => import('@/views/home/home')
     }, {
       path: '/',
       name: 'Login',
@@ -25,6 +25,10 @@ export default new Router({
       path: '/goods',
       name: 'Goods',
       component: () => import('@/views/book/goods')
+    }, {
+      path: '/post',
+      name: 'Posy',
+      component: () => import('@/views/Post/post')
     }, {
       path: '/userHome',
       name: 'userHome',
@@ -102,7 +106,7 @@ export default new Router({
     }, {
       path: '/searchResult',
       name: 'SearchResult',
-      component: () => import('@/views/search/searchResult')
+      component: () => import('@/views/search/searchResult1')
     }, {
       path: '/bookDetail',
       name: 'BookDetail',
@@ -119,10 +123,3 @@ export default new Router({
     }
   ]
 })
-
-// 获取原型对象上的push函数
-const originalPush = Router.prototype.push
-// 修改原型对象中的push方法
-Router.prototype.push = function push (location) {
-  return originalPush.call(this, location).catch(err => err)
-}

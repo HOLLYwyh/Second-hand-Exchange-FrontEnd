@@ -32,6 +32,7 @@
         <div style="margin-top: 20px;display: flex;justify-content: center">
           <el-button type="success" @click="addCart()">加入购物车</el-button>
           <el-button type="primary">立即购买</el-button>
+          <el-button type="danger">联系卖家</el-button>
         </div>
         <!--商品信息-->
         <div class="album-tabs-wrap">
@@ -57,6 +58,7 @@ import NavBar from '../../components/NavBar'
 import Particles from '../../components/Particles'
 import {bookDetail} from '../../api/book/bookDetail'
 import {addCart} from '../../api/cart/cart'
+import {getUserInfo} from "../../api/Home/home";
 
 export default {
   name: 'bookDetail',
@@ -80,10 +82,11 @@ export default {
       else {
         this.details = res.data
         console.log(res.data)
-        // TODO 这里还要获取人的卖货者的姓名,这里还要修改一下
-        this.detailInfo.push({index: 1, title: '提供者', content: res.data.userId}, {index: 2, title: '价格', content: res.data.goodsPrice + '￥'},
-          {index: 3, title: '联系方式', content: '19821229038'}, {index: 4, title: '上架时间', content: res.data.goodsDate.substring(0, 10)},
-          {index: 5, title: '剩余数量', content: res.data.sellNum})
+        let params1 = {'userId': res.data.userId}
+        getUserInfo(params1).then(re => {
+          this.detailInfo.push({index: 1, title: '提供者', content: re.data.userName}, {index: 2, title: '价格', content: res.data.goodsPrice + '￥'},
+            {index: 3, title: '上架时间', content: res.data.goodsDate.substring(0, 10)}, {index: 4, title: '剩余数量', content: res.data.sellNum})
+        })
       }
     })
   },

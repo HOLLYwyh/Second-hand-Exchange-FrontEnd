@@ -21,21 +21,38 @@
             </div>
             <div class="box-body">
               <div style="display: flex;justify-content: center">
-                <div v-for="(it, id) in goodsSizeList[index]" :key="id" class="post" @click="goToBook(item.bookList[goodsIndexList[index]+id].goodsId)">
-                    <el-card class="card" shadow="hover">
-                      <div class="book-title">{{ item.bookList[goodsIndexList[index]+id].goodsName}}</div>
+                <div v-for="(it, id) in goodsSizeList[index]" :key="id" class="post" >
+                  <el-card class="card" shadow="hover">
+                    <div class="book-title">{{ item.bookList[goodsIndexList[index]+id].goodsName}}</div>
+                    <div style="display: flex" @click="goToBook(item.bookList[goodsIndexList[index]+id].goodsId)">
                       <img :src=item.bookList[goodsIndexList[index]+id].goodsImage alt="这是一张图片" class="book-img">
-                      <div>售价：￥ {{item.bookList[goodsIndexList[index]+id].goodsPrice}}</div>
-                        <div>剩余：{{item.bookList[goodsIndexList[index]+id].sellNum}}</div>
-                    </el-card>
+                      <ul class="goods-info">
+                        <li style="margin-top: 5px;font-weight: bolder;color: red;font-size: 18px">￥ {{item.bookList[goodsIndexList[index]+id].goodsPrice}}</li>
+                        <li style="margin-top: 10px;font-weight: bolder;color: #6A5ACD" v-if="item.bookList[goodsIndexList[index]+id].newnessDegree<10">{{item.bookList[goodsIndexList[index]+id].newnessDegree}}成新</li>
+                        <li style="margin-top: 10px;font-weight: bolder;color: #6A5ACD" v-if="item.bookList[goodsIndexList[index]+id].newnessDegree===10">全新</li>
+                        <li style="text-align: center;margin-top: 30px">剩余：{{item.bookList[goodsIndexList[index]+id].sellNum}}</li>
+                      </ul>
+                    </div>
+                    <div style="display: flex;margin-top: 10px">
+                      <img  style="width: 50px;height: 50px" :src="item.bookList[goodsIndexList[index]+id].userImage">
+                      <div style="margin-left: 10px">
+                        <div style="font-style:oblique">提供者</div>
+                        <div style="margin-top: 10px;font-style:oblique">{{item.bookList[goodsIndexList[index]+id].userName}}</div>
+                      </div>
+                      <div style="margin-left: 30px;margin-top: 15px" @click="goToCategory(item.goodsCategory)">
+                        <div  v-if="item.goodsCategory === 'textbook'" class="arrow-line-1">{{getCategoryName(item.goodsCategory)}}</div>
+                        <div  v-if="item.goodsCategory === 'teachingMaterials'" class="arrow-line-2">{{getCategoryName(item.goodsCategory)}}</div>
+                        <div  v-if="item.goodsCategory === 'extracurricularBook'" class="arrow-line-3">{{getCategoryName(item.goodsCategory)}}</div>
+                        <div  v-if="item.goodsCategory === 'rests'" class="arrow-line-4">{{getCategoryName(item.goodsCategory)}}</div>
+                      </div>
+                    </div>
+                  </el-card>
                 </div>
               </div>
               <!--底部翻页栏-->
               <div class="pagination">
-                <!--这里需要优化一下-->
-                <el-pagination v-if="goodsSizeList[index]>=pageSize||pageChangeList[index]" layout="prev, pager, next" :page-size="pageSize"
-                               :total=5 :current-page.sync="pageNumberList[index].number" :page-count="7"
-                               @current-change="turnPage(index, pageNumberList[index].number, item.goodsCategory)"></el-pagination>
+                <el-button type="primary" @click="changeGoods(item.goodsCategory)">换一换</el-button>
+                <router-link style="margin-left: 100px" :to="'goods?category='+item.goodsCategory" class="router-link-active">查看更多 ···</router-link>
               </div>
             </div>
           </div>
@@ -52,7 +69,7 @@ import { swiperList } from '../../assets/data/swiper'
 import BackToTop from '../../components/BackToTop'
 import Particles from '../../components/Particles'
 import NavBar from '../../components/NavBar'
-import { getBookAPI } from '../../api/Home/home'
+import { getBookAPI, getUserInfo } from '../../api/Home/home'
 
 export default {
   name: 'Home',
@@ -69,8 +86,6 @@ export default {
       goodsList: [],
       goodsIndexList: [],
       goodsSizeList: [],
-      pageNumberList: [],
-      pageChangeList: [],
       pageSize: 4
     }
   },
@@ -80,7 +95,7 @@ export default {
   },
   methods: {
     getBooks () {
-      let params = { 'goodsCategory': 'all', 'pageNumber': 0, 'pageSize': this.pageSize }
+      let params = { 'goodsCategory': 'all', 'pageSize': this.pageSize }
       getBookAPI(params).then(res => {
         if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
         else {
@@ -88,9 +103,15 @@ export default {
           for (let i = 0; i < this.goodsList.length; i++) {
             this.goodsSizeList.push(this.goodsList[i].bookList.length)
             this.goodsIndexList.push(0)
-            this.pageNumberList.push({number: 1})
-            this.pageChangeList.push(false)
+            for (let j = 0; j < this.goodsList[i].bookList.length; j++) {
+              let params = {'userId': this.goodsList[i].bookList[j].userId}
+              getUserInfo(params).then(re => {
+                this.goodsList[i].bookList[j]['userName'] = re.data.userName
+                this.$forceUpdate()
+              })
+            }
           }
+          this.$forceUpdate()
         }
       })
     },
@@ -104,19 +125,54 @@ export default {
     goToBook (goodsId) {
       this.$router.push(`/bookDetail?id=${goodsId}`)
     },
-    turnPage (index, pageNumber, category) {
-      console.log(index)
-      let params = { 'goodsCategory': category, 'pageNumber': pageNumber - 1, 'pageSize': this.pageSize }
+    changeGoods (category) {
+      let params = { 'goodsCategory': category, 'pageSize': this.pageSize }
       getBookAPI(params).then(res => {
         if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
         else {
-          this.goodsList[index] = res.data[0]
-          console.log(res.data[0])
-          this.goodsSizeList[index] = this.goodsList[index].bookList.length
-          this.pageChangeList[index] = true
+          if (category === 'textbook') {
+            this.goodsList[0].bookList = res.data[0].bookList
+            for (let i = 0; i < res.data[0].bookList.length; i++) {
+              let params = {'userId': res.data[0].bookList[i].userId}
+              getUserInfo(params).then(re => {
+                this.goodsList[0].bookList[i]['userName'] = re.data.userName
+                this.$forceUpdate()
+              })
+            }
+          } else if (category === 'teachingMaterials') {
+            this.goodsList[1].bookList = res.data[0].bookList
+            for (let i = 0; i < res.data[0].bookList.length; i++) {
+              let params = {'userId': res.data[0].bookList[i].userId}
+              getUserInfo(params).then(re => {
+                this.goodsList[1].bookList[i]['userName'] = re.data.userName
+                this.$forceUpdate()
+              })
+            }
+          } else if (category === 'extracurricularBook') {
+            this.goodsList[2].bookList = res.data[0].bookList
+            for (let i = 0; i < res.data[0].bookList.length; i++) {
+              let params = {'userId': res.data[0].bookList[i].userId}
+              getUserInfo(params).then(re => {
+                this.goodsList[2].bookList[i]['userName'] = re.data.userName
+                this.$forceUpdate()
+              })
+            }
+          } else if (category === 'rests') {
+            this.goodsList[3].bookList = res.data[0].bookList
+            for (let i = 0; i < res.data[0].bookList.length; i++) {
+              let params = {'userId': res.data[0].bookList[i].userId}
+              getUserInfo(params).then(re => {
+                this.goodsList[3].bookList[i]['userName'] = re.data.userName
+                this.$forceUpdate()
+              })
+            }
+          }
           this.$forceUpdate()
         }
       })
+    },
+    goToCategory (category) {
+      this.$router.push('goods?category=' + category)
     }
   }
 }
@@ -154,7 +210,7 @@ export default {
 
 .box-body{
   padding: 1px 0;
-  height: 350px;
+  height: 400px;
   background-color: whitesmoke;
 }
 
@@ -167,7 +223,7 @@ export default {
   margin-top: 30px;
 }
 .card{
-  height: 250px;
+  height: 270px;
   width: 250px;
 }
 .pagination{
@@ -178,10 +234,77 @@ export default {
 }
 .book-img{
   display: flex;
-  flex-direction: column;
-  margin-left: 47px;
+  margin-left: -10px;
   margin-top: 10px;
   width: 130px;
   height: 150px;
+}
+.router-link-active {
+  text-decoration: none;
+  color: teal;
+}
+.goods-info {
+  margin-left: -15px;
+  list-style:none;
+}
+.arrow-line-1 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: tomato;
+  color: #F9F0DA;
+}
+.arrow-line-1::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: tomato;
+
+}
+.arrow-line-2 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: teal;
+  color: #F9F0DA;
+}
+.arrow-line-2::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: teal;
+
+}
+.arrow-line-3 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: purple;
+  color: #F9F0DA;
+}
+.arrow-line-3::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: purple;
+
+}
+.arrow-line-4 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: cornflowerblue;
+  color: #F9F0DA;
+}
+.arrow-line-4::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: cornflowerblue;
+
 }
 </style>

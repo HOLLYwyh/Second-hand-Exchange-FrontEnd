@@ -7,11 +7,11 @@
         <li v-for="(item , index) in items" v-bind:key="index" style="margin-top: 10px">
           <a :href="item.href" :class="item.id" >{{item.name}}</a>
         </li>
+        <!--        <li>-->
+        <!--&lt;!&ndash;          <el-input type="text" placeholder="搜索书籍"  v-model="keywords" class="input"></el-input>&ndash;&gt;-->
+        <!--        </li>-->
         <li>
-          <el-input type="text" placeholder="搜索书籍"  v-model="keywords" class="input"></el-input>
-        </li>
-        <li>
-          <el-button class="button" type="primary" style="padding-left: 9px" @click="search">搜索</el-button>
+          <el-button class="button" type="primary" style="padding-left: 9px" @click="search">搜索书籍</el-button>
         </li>
         <li>
           <el-avatar class="head" :src="avatar" size="large"></el-avatar>
@@ -48,7 +48,8 @@ export default {
           href: '#/'
         },
         {
-          name: '收藏夹'
+          name: '求物',
+          href: '#/post'
         },
         {
           name: '购物车',
@@ -140,9 +141,10 @@ export default {
   margin-left: 180px
 }
 .button{
-  width: 50%;
+  width: 100%;
   margin-top: 15px;
-  margin-left: 300px
+  margin-left: 270px;
+  z-index: 1000;
 }
 .head{
   margin-top: 15px;
