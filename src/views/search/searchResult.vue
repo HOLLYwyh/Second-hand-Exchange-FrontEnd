@@ -6,109 +6,45 @@
       {{this.searchInfo}} 搜索结果如下：
     </div>
     <!--搜索结果-->
+    <!--没有结果-->
     <div class="searchBar">
-      <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
-        <el-tab-pane label="课本" name="first">
-          <div class="tab">
-            <div>
-              <div v-if="list1.length === 0" class="searchInfo">暂无搜索结果</div>
-            </div>
-            <div>
-              <div style="width: 100%;display: flex;flex-direction: row;flex-wrap: wrap">
-              <div v-for="(item, index) in list1" :key="index" style="width: 25%">
-                <div style="margin-top: 20px" @click="goToBook(item.goodsId)">
-                  <el-card class="card">
-                    <div class="book-title">{{item.goodsName}}</div>
-                    <img :src="item.goodsImage" alt="这是一张图片" class="book-img">
-                    <div>售价：￥ {{item.goodsPrice}}</div>
-                    <div>剩余：{{item.sellNum}}</div>
-                  </el-card>
+      <el-empty v-if="bookList.length === 0" description="暂时未搜索到相关记录"></el-empty>
+    </div>
+    <!--有结果-->
+    <div v-if="bookList.length > 0" class="searchBar">
+      <div>
+        <div style="width: 100%;display: flex;flex-direction: row;flex-wrap: wrap">
+          <div v-for="(item, index) in bookList" :key="index" style="width: 25%">
+            <div style="margin-top: 20px">
+              <el-card class="card">
+                <div class="book-title">{{item.goodsName}}</div>
+                <div style="display: flex" @click="goToBook(item.goodsId)">
+                  <img :src="item.goodsImage" alt="这是一张图片" class="book-img">
+                  <ul class="goods-info">
+                    <li style="margin-top: 5px;font-weight: bolder;color: red;font-size: 18px">￥ {{item.goodsPrice}}</li>
+                    <li style="margin-top: 10px;font-weight: bolder;color: #6A5ACD" v-if="item.newnessDegree<10">{{item.newnessDegree}}成新</li>
+                    <li style="margin-top: 10px;font-weight: bolder;color: #6A5ACD" v-if="item.newnessDegree===10">全新</li>
+                    <li style="text-align: center;margin-top: 30px">剩余：{{item.sellNum}}</li>
+                  </ul>
                 </div>
-              </div>
-            </div>
-            </div>
-            <!--底部分页栏-->
-            <div class="pagination">
-              <el-pagination background layout="prev, pager, next" :page-size="8" :total=list1.length v-if="list1.length>8"></el-pagination>
-            </div>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="教辅资料" name="second">
-          <div class="tab">
-            <div>
-              <div v-if="list2.length === 0" class="searchInfo">暂无搜索结果</div>
-            </div>
-            <div>
-              <div style="width: 100%;display: flex;flex-direction: row;flex-wrap: wrap">
-                <div v-for="(item, index) in list2" :key="index" style="width: 25%">
-                  <div style="margin-top: 20px" @click="goToBook(item.goodsId)">
-                    <el-card class="card">
-                      <div class="book-title">{{item.goodsName}}</div>
-                      <img :src="item.goodsImage" alt="这是一张图片" class="book-img">
-                      <div>售价：￥ {{item.goodsPrice}}</div>
-                      <div>剩余：{{item.sellNum}}</div>
-                    </el-card>
+                <div style="display: flex;margin-top: 10px;margin-left: 30px">
+                  <img  style="width: 50px;height: 50px" :src="item.userImage">
+                  <div style="margin-left: 10px">
+                    <div style="font-style:oblique">提供者</div>
+                    <div style="margin-top: 10px;font-style:oblique">{{item.userName}}</div>
+                  </div>
+                  <div style="margin-left: 70px;margin-top: 15px" @click="goToCategory(item.goodsCategory)">
+                    <div  v-if="item.goodsCategory === 'textbook'" class="arrow-line-1">{{getCategoryName(item.goodsCategory)}}</div>
+                    <div  v-if="item.goodsCategory === 'teachingMaterials'" class="arrow-line-2">{{getCategoryName(item.goodsCategory)}}</div>
+                    <div  v-if="item.goodsCategory === 'extracurricularBook'" class="arrow-line-3">{{getCategoryName(item.goodsCategory)}}</div>
+                    <div  v-if="item.goodsCategory === 'rests'" class="arrow-line-4">{{getCategoryName(item.goodsCategory)}}</div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <!--底部分页栏-->
-            <div class="pagination">
-              <el-pagination background layout="prev, pager, next" :page-size="8" :total=list2.length v-if="list2.length>8"></el-pagination>
+              </el-card>
             </div>
           </div>
-        </el-tab-pane>
-        <el-tab-pane label="课外阅读" name="third">
-          <div class="tab">
-            <div>
-              <div v-if="list3.length === 0" class="searchInfo">暂无搜索结果</div>
-            </div>
-            <div>
-              <div style="width: 100%;display: flex;flex-direction: row;flex-wrap: wrap">
-                <div v-for="(item, index) in list3" :key="index" style="width: 25%">
-                  <div style="margin-top: 20px" @click="goToBook(item.goodsId)">
-                    <el-card class="card">
-                      <div class="book-title">{{item.goodsName}}</div>
-                      <img :src="item.goodsImage" alt="这是一张图片" class="book-img">
-                      <div>售价：￥ {{item.goodsPrice}}</div>
-                      <div>剩余：{{item.sellNum}}</div>
-                    </el-card>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!--底部分页栏-->
-            <div class="pagination">
-              <el-pagination background layout="prev, pager, next" :page-size="8" :total=list3.length v-if="list3.length>8"></el-pagination>
-            </div>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="其他" name="fourth">
-          <div class="tab">
-            <div>
-              <div v-if="list4.length === 0" class="searchInfo">暂无搜索结果</div>
-            </div>
-            <div>
-              <div style="width: 100%;display: flex;flex-direction: row;flex-wrap: wrap">
-                <div v-for="(item, index) in list4" :key="index" style="width: 25%">
-                  <div style="margin-top: 20px" @click="goToBook(item.goodsId)">
-                    <el-card class="card">
-                      <div class="book-title">{{item.goodsName}}</div>
-                      <img :src="item.goodsImage" alt="这是一张图片" class="book-img">
-                      <div>售价：￥ {{item.goodsPrice}}</div>
-                      <div>剩余：{{item.sellNum}}</div>
-                    </el-card>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!--底部分页栏-->
-            <div class="pagination">
-              <el-pagination background layout="prev, pager, next" :page-size="8" :total=list4.length v-if="list4.length>8"></el-pagination>
-            </div>
-          </div>
-        </el-tab-pane>
-      </el-tabs>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -116,8 +52,7 @@
 <script>
 import NavBar from '../../components/NavBar'
 import {searchAPI} from '../../api/search/search'
-
-// TODO: 搜索结果分页
+import {getUserInfo} from '../../api/Home/home'
 
 export default {
   name: 'SearchResult',
@@ -126,10 +61,7 @@ export default {
     return {
       activeName: 'first',
       searchInfo: '',
-      list1: [],
-      list2: [],
-      list3: [],
-      list4: []
+      bookList: []
     }
   },
   created () {
@@ -137,21 +69,16 @@ export default {
     else {
       if (this.$route.query.info === undefined) this.searchInfo = ''
       else this.searchInfo = this.$route.query.info
-      let params = { 'searchInfo': this.searchInfo, 'goodsCategory': 'all', 'pageNumber': 0, 'pageSize': 4 }
+      let params = { 'searchInfo': this.searchInfo, 'pageNumber': 0, 'pageSize': 1600 }
       searchAPI(params).then(res => {
         console.log(res.data)
-        if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
-        else {
-          let max = -100
-          this.list1 = res.data[0].bookList
-          this.list2 = res.data[1].bookList
-          this.list3 = res.data[2].bookList
-          this.list4 = res.data[3].bookList
-          max = Math.max(this.list1.length, this.list2.length, this.list3.length, this.list4.length)
-          if (max === this.list1.length) this.activeName = 'first'
-          else if (max === this.list2.length) this.activeName = 'second'
-          else if (max === this.list3.length) this.activeName = 'third'
-          else if (max === this.list4.length) this.activeName = 'fourth'
+        for (let i = 0; i < res.data.length; i++) {
+          this.bookList.push(res.data[i])
+          let params1 = {'userId': res.data[i].userId}
+          getUserInfo(params1).then(re => {
+            this.bookList[i]['userName'] = re.data.userName
+            this.$forceUpdate()
+          })
         }
       })
     }
@@ -162,6 +89,16 @@ export default {
     },
     goToBook (goodsId) {
       this.$router.push(`/bookDetail?id=${goodsId}`)
+    },
+    getCategoryName (category) {
+      if (category === 'textbook') return '课本'
+      else if (category === 'teachingMaterials') return '教辅资料'
+      else if (category === 'extracurricularBook') return '课外书'
+      else if (category === 'rests') return '其他'
+      else return '暂无'
+    },
+    goToCategory (category) {
+      this.$router.push('goods?category=' + category)
     }
   }
 }
@@ -176,16 +113,9 @@ export default {
 .searchBar{
   margin-top: 20px;
 }
-.tab{
-  min-height: 450px
-}
-.pagination{
-  display: flex;
-  justify-content: center;
-  margin-top: 50px;
-}
 .card{
-  height: 250px;
+  width: 350px;
+  height: 270px;
   margin-left: 20px
 }
 .book-title{
@@ -198,5 +128,69 @@ export default {
   margin-top: 10px;
   width: 130px;
   height: 150px;
+}
+.goods-info {
+  margin-left: -15px;
+  list-style:none;
+}
+.arrow-line-1 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: tomato;
+  color: #F9F0DA;
+}
+.arrow-line-1::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: tomato;
+
+}
+.arrow-line-2 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: teal;
+  color: #F9F0DA;
+}
+.arrow-line-2::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: teal;
+
+}
+.arrow-line-3 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: purple;
+  color: #F9F0DA;
+}
+.arrow-line-3::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: purple;
+
+}
+.arrow-line-4 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: cornflowerblue;
+  color: #F9F0DA;
+}
+.arrow-line-4::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: cornflowerblue;
+
 }
 </style>

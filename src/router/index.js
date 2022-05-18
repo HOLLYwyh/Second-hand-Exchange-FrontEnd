@@ -106,7 +106,7 @@ export default new Router({
     }, {
       path: '/searchResult',
       name: 'SearchResult',
-      component: () => import('@/views/search/searchResult1')
+      component: () => import('@/views/search/searchResult')
     }, {
       path: '/bookDetail',
       name: 'BookDetail',

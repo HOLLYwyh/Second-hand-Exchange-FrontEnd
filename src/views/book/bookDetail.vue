@@ -58,7 +58,7 @@ import NavBar from '../../components/NavBar'
 import Particles from '../../components/Particles'
 import {bookDetail} from '../../api/book/bookDetail'
 import {addCart} from '../../api/cart/cart'
-import {getUserInfo} from "../../api/Home/home";
+import {getUserInfo} from '../../api/Home/home'
 
 export default {
   name: 'bookDetail',
