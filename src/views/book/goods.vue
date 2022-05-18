@@ -45,8 +45,8 @@
                       </ul>
                     </div>
                     <div style="display: flex;margin-top: 10px;margin-left: 30px">
-                      <img  style="width: 50px;height: 50px" :src="item.userImage">
-                      <div style="margin-left: 10px">
+                      <img  style="width: 50px;height: 50px" :src="item.userImage" @click="goToUserDetail(item.userId)">
+                      <div style="margin-left: 10px" @click="goToUserDetail(item.userId)">
                         <div style="font-style:oblique">提供者</div>
                         <div style="margin-top: 10px;font-style:oblique">{{item.userName}}</div>
                       </div>
@@ -71,7 +71,7 @@
 <script>
 import NavBar from '../../components/NavBar'
 import Particles from '../../components/Particles'
-import { getBookAPI, getUserInfo } from '../../api/Home/home'
+import { getBookAPI } from '../../api/Home/home'
 
 export default {
   name: 'goods',
@@ -98,13 +98,6 @@ export default {
       else {
         this.goods['category'] = res.data[0].goodsCategory
         this.bookList = res.data[0].bookList
-        for (let i = 0; i < this.bookList.length; i++) {
-          let params1 = {'userId': res.data[0].bookList[i].userId}
-          getUserInfo(params1).then(re => {
-            this.bookList[i]['userName'] = re.data.userName
-            this.$forceUpdate()
-          })
-        }
         this.$forceUpdate()
       }
     })
@@ -136,6 +129,9 @@ export default {
     },
     goToBook (goodsId) {
       this.$router.push(`/bookDetail?id=${goodsId}`)
+    },
+    goToUserDetail (id) {
+      this.$router.push(`/user?id=${id}`)
     }
   }
 }

@@ -7,14 +7,11 @@
         <li v-for="(item , index) in items" v-bind:key="index" style="margin-top: 10px">
           <a :href="item.href" :class="item.id" >{{item.name}}</a>
         </li>
-        <!--        <li>-->
-        <!--&lt;!&ndash;          <el-input type="text" placeholder="搜索书籍"  v-model="keywords" class="input"></el-input>&ndash;&gt;-->
-        <!--        </li>-->
         <li>
           <el-button class="button" type="primary" style="padding-left: 9px" @click="search">搜索书籍</el-button>
         </li>
-        <li>
-          <el-avatar class="head" :src="avatar" size="large"></el-avatar>
+        <li @click="goToUserDetail">
+          <el-avatar class="head" :src="user.userImage" size="large" ></el-avatar>
         </li>
         <li>
           <el-dropdown class="drop" trigger="click" style="color: white">
@@ -35,11 +32,13 @@
 </template>
 
 <script>
+import {getUserInfo} from '../api/userHome/userHome'
+
 export default {
   name: 'NavBar',
   data () {
     return {
-      avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
+      user: {},
       nowIndex: 0,
       keywords: '',
       items: [
@@ -62,12 +61,20 @@ export default {
       ]
     }
   },
+  created () {
+    getUserInfo().then(res => {
+      this.user = res.data
+    })
+  },
   methods: {
     search () {
       if (this.keywords === '') this.$router.push('/search')
     },
     toUserHome () {
       this.$router.push('/userHome')
+    },
+    goToUserDetail () {
+      this.$router.push(`/user?id=${this.user.userId}`)
     }
   }
 }

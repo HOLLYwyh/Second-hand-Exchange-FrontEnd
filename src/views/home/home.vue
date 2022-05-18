@@ -34,8 +34,8 @@
                       </ul>
                     </div>
                     <div style="display: flex;margin-top: 10px">
-                      <img  style="width: 50px;height: 50px" :src="item.bookList[goodsIndexList[index]+id].userImage">
-                      <div style="margin-left: 10px">
+                      <img  style="width: 50px;height: 50px" :src="item.bookList[goodsIndexList[index]+id].userImage" @click="goToUserDetail(item.bookList[goodsIndexList[index]+id].userId)">
+                      <div style="margin-left: 10px" @click="goToUserDetail(item.bookList[goodsIndexList[index]+id].userId)">
                         <div style="font-style:oblique">提供者</div>
                         <div style="margin-top: 10px;font-style:oblique">{{item.bookList[goodsIndexList[index]+id].userName}}</div>
                       </div>
@@ -69,7 +69,7 @@ import { swiperList } from '../../assets/data/swiper'
 import BackToTop from '../../components/BackToTop'
 import Particles from '../../components/Particles'
 import NavBar from '../../components/NavBar'
-import { getBookAPI, getUserInfo } from '../../api/Home/home'
+import { getBookAPI } from '../../api/Home/home'
 
 export default {
   name: 'Home',
@@ -103,13 +103,6 @@ export default {
           for (let i = 0; i < this.goodsList.length; i++) {
             this.goodsSizeList.push(this.goodsList[i].bookList.length)
             this.goodsIndexList.push(0)
-            for (let j = 0; j < this.goodsList[i].bookList.length; j++) {
-              let params = {'userId': this.goodsList[i].bookList[j].userId}
-              getUserInfo(params).then(re => {
-                this.goodsList[i].bookList[j]['userName'] = re.data.userName
-                this.$forceUpdate()
-              })
-            }
           }
           this.$forceUpdate()
         }
@@ -132,40 +125,12 @@ export default {
         else {
           if (category === 'textbook') {
             this.goodsList[0].bookList = res.data[0].bookList
-            for (let i = 0; i < res.data[0].bookList.length; i++) {
-              let params = {'userId': res.data[0].bookList[i].userId}
-              getUserInfo(params).then(re => {
-                this.goodsList[0].bookList[i]['userName'] = re.data.userName
-                this.$forceUpdate()
-              })
-            }
           } else if (category === 'teachingMaterials') {
             this.goodsList[1].bookList = res.data[0].bookList
-            for (let i = 0; i < res.data[0].bookList.length; i++) {
-              let params = {'userId': res.data[0].bookList[i].userId}
-              getUserInfo(params).then(re => {
-                this.goodsList[1].bookList[i]['userName'] = re.data.userName
-                this.$forceUpdate()
-              })
-            }
           } else if (category === 'extracurricularBook') {
             this.goodsList[2].bookList = res.data[0].bookList
-            for (let i = 0; i < res.data[0].bookList.length; i++) {
-              let params = {'userId': res.data[0].bookList[i].userId}
-              getUserInfo(params).then(re => {
-                this.goodsList[2].bookList[i]['userName'] = re.data.userName
-                this.$forceUpdate()
-              })
-            }
           } else if (category === 'rests') {
             this.goodsList[3].bookList = res.data[0].bookList
-            for (let i = 0; i < res.data[0].bookList.length; i++) {
-              let params = {'userId': res.data[0].bookList[i].userId}
-              getUserInfo(params).then(re => {
-                this.goodsList[3].bookList[i]['userName'] = re.data.userName
-                this.$forceUpdate()
-              })
-            }
           }
           this.$forceUpdate()
         }
@@ -173,6 +138,9 @@ export default {
     },
     goToCategory (category) {
       this.$router.push('goods?category=' + category)
+    },
+    goToUserDetail (id) {
+      this.$router.push(`/user?id=${id}`)
     }
   }
 }

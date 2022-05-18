@@ -120,6 +120,11 @@ export default new Router({
       path: '/communicate',
       name: 'communicate',
       component: () => import('@/views/communicate/communicate')
+    },
+    {
+      path: '/user',
+      name: 'user',
+      component: () => import('@/views/userHome/user')
     }
   ]
 })

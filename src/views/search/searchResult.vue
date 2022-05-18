@@ -28,8 +28,8 @@
                   </ul>
                 </div>
                 <div style="display: flex;margin-top: 10px;margin-left: 30px">
-                  <img  style="width: 50px;height: 50px" :src="item.userImage">
-                  <div style="margin-left: 10px">
+                  <img  style="width: 50px;height: 50px" :src="item.userImage" @click="goToUserDetail(item.userId)">
+                  <div style="margin-left: 10px" @click="goToUserDetail(item.userId)">
                     <div style="font-style:oblique">提供者</div>
                     <div style="margin-top: 10px;font-style:oblique">{{item.userName}}</div>
                   </div>
@@ -52,7 +52,6 @@
 <script>
 import NavBar from '../../components/NavBar'
 import {searchAPI} from '../../api/search/search'
-import {getUserInfo} from '../../api/Home/home'
 
 export default {
   name: 'SearchResult',
@@ -74,11 +73,6 @@ export default {
         console.log(res.data)
         for (let i = 0; i < res.data.length; i++) {
           this.bookList.push(res.data[i])
-          let params1 = {'userId': res.data[i].userId}
-          getUserInfo(params1).then(re => {
-            this.bookList[i]['userName'] = re.data.userName
-            this.$forceUpdate()
-          })
         }
       })
     }
@@ -99,6 +93,9 @@ export default {
     },
     goToCategory (category) {
       this.$router.push('goods?category=' + category)
+    },
+    goToUserDetail (id) {
+      this.$router.push(`/user?id=${id}`)
     }
   }
 }
