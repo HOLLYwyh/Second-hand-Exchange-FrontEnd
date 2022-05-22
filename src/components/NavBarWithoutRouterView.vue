@@ -57,6 +57,10 @@ export default {
         {
           name: '上架商品',
           href: '#/shelveBook'
+        },
+        {
+          name: '交流社区',
+          href: '#/barHome'
         }
       ]
     }

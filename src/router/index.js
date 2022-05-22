@@ -125,6 +125,16 @@ export default new Router({
       path: '/user',
       name: 'user',
       component: () => import('@/views/userHome/user')
+    },
+    {
+      path: '/barHome',
+      name: 'BarHome',
+      component: () => import('@/views/Bar/barHome')
+    },
+    {
+      path: '/bar',
+      name: 'Bar',
+      component: () => import('@/views/Bar/bar')
     }
   ]
 })

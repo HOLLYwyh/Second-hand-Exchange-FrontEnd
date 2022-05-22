@@ -7,33 +7,33 @@
         <!--商品图标-->
         <div class="book-top-card">
           <div class="book-img-wrap">
-            <img src="../../assets/detailIcon/xianzhi.jpg" alt="商品种类图片">
+            <img src="../../assets/detailIcon/communicate.jpeg" alt="商品种类图片">
           </div>
           <div class="book-info">
-            <div class="book-name">求物中心</div>
+            <div class="book-name">交流社区</div>
             <div>
               <el-card style="margin-top: 10px;max-height: 140px;background: transparent;text-justify: inter-ideograph;overflow: auto;">
-                <div style="color: #6A5ACD;font-weight: bolder">求物简介</div>
+                <div style="color: #6A5ACD;font-weight: bolder">简介</div>
                 <div>{{introduction}}</div>
               </el-card>
             </div>
           </div>
         </div>
         <div style="margin-top: -20px;display: flex;justify-content: center;margin-left: 100px">
-          <el-button type="primary" @click="createPost()">发布帖子</el-button>
+          <el-button type="primary" @click="createPostBar()">创建讨论区</el-button>
         </div>
         <!--帖子信息-->
         <el-tabs v-model="activeName">
           <el-tab-pane label="广场" name="first">
             <!--没有求物贴-->
             <div class="searchBar">
-              <el-empty v-if="postList.length === 0" description="暂时没有求物贴"></el-empty>
+              <el-empty v-if="barList.length === 0" description="暂时没有讨论区"></el-empty>
             </div>
             <!--有帖子-->
-            <div v-if="postList.length > 0" class="searchBar">
+            <div v-if="barList.length > 0" class="searchBar">
               <div>
                 <div style="width: 100%;display: flex;flex-direction: row;flex-wrap: wrap">
-                  <div v-for="(item, index) in postList" :key="index" style="width: 25%">
+                  <div v-for="(item, index) in barList" :key="index" style="width: 25%">
                     <div style="margin-top: 20px">
                       <el-card class="card">
                       </el-card>
@@ -46,13 +46,13 @@
           <el-tab-pane label="我的" name="second">
             <!--没有求物贴-->
             <div class="searchBar">
-              <el-empty v-if="myPostList.length === 0" description="您暂时没有求物贴"></el-empty>
+              <el-empty v-if="myBarList.length === 0" description="您暂时没有参加任何讨论区"></el-empty>
             </div>
             <!--有帖子-->
-            <div v-if="myPostList.length > 0" class="searchBar">
+            <div v-if="myBarList.length > 0" class="searchBar">
               <div>
                 <div style="width: 100%;display: flex;flex-direction: row;flex-wrap: wrap">
-                  <div v-for="(item, index) in myPostList" :key="index" style="width: 25%">
+                  <div v-for="(item, index) in myBarList" :key="index" style="width: 25%">
                     <div style="margin-top: 20px">
                       <el-card class="card">
                       </el-card>
@@ -73,23 +73,22 @@ import NavBar from '../../components/NavBar'
 import Particles from '../../components/Particles'
 
 export default {
-  name: 'post',
+  name: 'barHome',
   components: {NavBar, Particles},
   data () {
     return {
-      goods: {},
-      postList: [],
-      myPostList: [],
-      introduction: '每一位同学都可以在此处发布求物贴，也可以查看其他同学的求物信息。如果愿意出闲置物品的同学欢迎查看对应的帖子和贴主聊天，购买物品。',
-      activeName: 'second'
+      barList: [],
+      myBarList: [],
+      introduction: '欢迎每一位同学在交流社区中建立讨论区或参与讨论，分享读书经验',
+      activeName: 'first'
     }
   },
   created () {
     if (window.sessionStorage.getItem('userID') === null) this.$router.push('/')
   },
   methods: {
-    createPost () {
-      console.log('发布帖子')
+    createPostBar () {
+      console.log('创建讨论区')
     }
   }
 }
