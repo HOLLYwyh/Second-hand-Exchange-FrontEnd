@@ -16,3 +16,11 @@ export function resetPassword (params) {
     data: JSON.stringify(params)
   })
 }
+
+export function getUserInfo () {
+  return request({
+    url: 'user/getUserInfo',
+    method: 'get',
+    headers: { 'Content-Type': 'application/json;charset=UTF-8' }
+  })
+}

@@ -7,3 +7,11 @@ export function getBookAPI (params) {
     params
   })
 }
+export function getUserInfo (params) {
+  return request({
+    url: 'user/getUserInfoById',
+    method: 'get',
+    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    params
+  })
+}

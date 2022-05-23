@@ -8,13 +8,10 @@
           <a :href="item.href" :class="item.id" >{{item.name}}</a>
         </li>
         <li>
-          <el-input type="text" placeholder="搜索书籍"  v-model="keywords" class="input"></el-input>
+          <el-button class="button" type="primary" style="padding-left: 9px" @click="search">搜索书籍</el-button>
         </li>
-        <li>
-          <el-button class="button" type="primary" style="padding-left: 9px" @click="search">搜索</el-button>
-        </li>
-        <li>
-          <el-avatar class="head" :src="avatar" size="large"></el-avatar>
+        <li @click="goToUserDetail">
+          <el-avatar class="head" :src="user.userImage" size="large"></el-avatar>
         </li>
         <li>
           <el-dropdown class="drop" trigger="click" style="color: white">
@@ -34,20 +31,23 @@
 </template>
 
 <script>
+import {getUserInfo} from '../api/userHome/userHome'
+
 export default {
   name: 'NavBar',
   data () {
     return {
-      avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
       nowIndex: 0,
       keywords: '',
+      user: {},
       items: [
         {
           name: '首页',
           href: '#/'
         },
         {
-          name: '收藏夹'
+          name: '求物',
+          href: '#/post'
         },
         {
           name: '购物车',
@@ -56,9 +56,18 @@ export default {
         {
           name: '上架商品',
           href: '#/shelveBook'
+        },
+        {
+          name: '交流社区',
+          href: '#/barHome'
         }
       ]
     }
+  },
+  created () {
+    getUserInfo().then(res => {
+      this.user = res.data
+    })
   },
   methods: {
     search () {
@@ -71,6 +80,9 @@ export default {
     },
     toUserHome () {
       this.$router.push('/userHome')
+    },
+    goToUserDetail () {
+      this.$router.push(`/user?id=${this.user.userId}`)
     }
   }
 }
@@ -144,9 +156,10 @@ export default {
   margin-left: 180px
 }
 .button{
-  width: 50%;
+  width: 100%;
   margin-top: 15px;
-  margin-left: 300px
+  margin-left: 270px;
+  z-index: 1000;
 }
 .head{
   margin-top: 15px;

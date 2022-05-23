@@ -12,8 +12,8 @@
           <div class="book-info">
             <div class="book-name">
               <div class="tag1">{{getCategoryName(details.goodsCategory)}}</div>{{details.goodsName}}
-              <div class="el-icon-star-on" v-show="favoriteVisible"></div>
-              <div class="el-icon-star-off" v-show="cancelFavoriteVisible"></div>
+              <div class="el-icon-star-on" v-show="favoriteVisible" @click="favorite(1)"></div>
+              <div class="el-icon-star-off" v-show="cancelFavoriteVisible" @click="favorite(0)"></div>
               <img src="../../assets/detailIcon/ContactService.png" alt="联系客服" style="width: 30px;height: 30px">
             </div>
             <div class="book-user-info">
@@ -29,23 +29,40 @@
             </div>
           </div>
         </div>
-        <div style="margin-top: 20px;display: flex;justify-content: center">
+        <div style="margin-top: 20px;display: flex;justify-content: center;margin-left: 100px">
           <el-button type="success" @click="addCart()">加入购物车</el-button>
           <el-button type="primary">立即购买</el-button>
+          <el-button type="danger">联系卖家</el-button>
         </div>
         <!--商品信息-->
-        <div class="album-tabs-wrap">
-          <el-tabs style="z-index: 1000;">
-            <el-tab-pane label="信息列表">
-              <div class="table">
-                <el-table :data="detailInfo" infinite-scroll-delay=500 infinite-scroll-disabled="noMore" stripe>
-                  <el-table-column prop="index"></el-table-column>
-                  <el-table-column prop="title" label="词条"></el-table-column>
-                  <el-table-column prop="content" label="信息"></el-table-column>
-                </el-table>
+        <div style="width: 100%;display: flex;flex-direction: row;flex-wrap: wrap;margin-top: 40px">
+          <el-card style="width: 400px;margin-left: 200px;height: 300px">
+            <div style="font-weight: bolder">商品信息</div>
+            <div class="album-tabs-wrap">
+              <el-tabs style="z-index: 1000;">
+                <div class="table">
+                  <el-table :data="detailInfo" infinite-scroll-delay=500 infinite-scroll-disabled="noMore" stripe>
+                    <el-table-column prop="title"></el-table-column>
+                    <el-table-column prop="content"></el-table-column>
+                  </el-table>
+                </div>
+              </el-tabs>
+            </div>
+          </el-card>
+          <el-card style="width: 400px;margin-left: 200px;height: 300px">
+            <div style="font-weight: bolder">卖家信息</div>
+            <div style="margin-top: 20px">
+              <div style="display: flex">
+                <img :src="seller.image" alt="这是一张图片" style="width: 150px;height: 150px" @click="goToUserDetail(seller.id)">
+                <div style="margin-left: 70px" @click="goToUserDetail(seller.id)">
+                  <div style="margin-top: 20px">提供者： {{seller.name}}</div>
+                  <div style="margin-top: 80px"></div>
+                  <router-link  :to="'user?id='+seller.id" class="router-link-active">用户详情 ···</router-link>
+                </div>
               </div>
-            </el-tab-pane>
-          </el-tabs>
+            </div>
+
+          </el-card>
         </div>
       </div>
     </div>
@@ -57,6 +74,7 @@ import NavBar from '../../components/NavBar'
 import Particles from '../../components/Particles'
 import {bookDetail} from '../../api/book/bookDetail'
 import {addCart} from '../../api/cart/cart'
+import {getUserInfo} from '../../api/Home/home'
 
 export default {
   name: 'bookDetail',
@@ -64,6 +82,7 @@ export default {
   data () {
     return {
       details: {},
+      seller: {},
       favoriteVisible: false,
       cancelFavoriteVisible: true,
       detailInfo: []
@@ -80,10 +99,14 @@ export default {
       else {
         this.details = res.data
         console.log(res.data)
-        // TODO 这里还要获取人的卖货者的姓名,这里还要修改一下
-        this.detailInfo.push({index: 1, title: '提供者', content: res.data.userId}, {index: 2, title: '价格', content: res.data.goodsPrice + '￥'},
-          {index: 3, title: '联系方式', content: '19821229038'}, {index: 4, title: '上架时间', content: res.data.goodsDate.substring(0, 10)},
-          {index: 5, title: '剩余数量', content: res.data.sellNum})
+        let params1 = {'userId': res.data.userId}
+        getUserInfo(params1).then(re => {
+          this.detailInfo.push({title: '价格', content: res.data.goodsPrice + '￥'}, {title: '崭新度', content: res.data.newnessDegree + '成新'},
+            {title: '上架时间', content: res.data.goodsDate.substring(0, 10)}, {title: '剩余数量', content: res.data.sellNum})
+          this.seller['image'] = re.data.userImage
+          this.seller['name'] = re.data.userName
+          this.seller['id'] = re.data.userId
+        })
       }
     })
   },
@@ -95,6 +118,17 @@ export default {
       else if (category === 'rests') return '其他'
       else return '暂无'
     },
+    favorite (status) {
+      if (status === 0) {
+        this.favoriteVisible = true
+        this.cancelFavoriteVisible = false
+        this.$forceUpdate()
+      } else if (status === 1) {
+        this.favoriteVisible = false
+        this.cancelFavoriteVisible = true
+        this.$forceUpdate()
+      }
+    },
     addCart () {
       let id
       id = this.$route.query.id
@@ -105,6 +139,9 @@ export default {
           this.$message.success('添加成功！')
         }
       })
+    },
+    goToUserDetail (id) {
+      this.$router.push(`/user?id=${id}`)
     }
   }
 }
@@ -189,12 +226,17 @@ export default {
 }
 
 .album-tabs-wrap {
-  margin-top: 20px;
+  margin-top: -20px;
   z-index: 1000;
+  width: 400px;
 }
 
 .el-table td, .el-table th.is-leaf {
   border-bottom: none;
   z-index: 1000;
+}
+.router-link-active {
+  text-decoration: none;
+  color: teal;
 }
 </style>

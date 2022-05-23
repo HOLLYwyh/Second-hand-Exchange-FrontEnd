@@ -38,6 +38,11 @@
                         <i slot="suffix" style="font-style: normal;color: #000000;font-weight: bold;line-height: 40px;margin-left: -50px">本</i>
                       </el-input>
                     </el-form-item>
+                    <el-form-item label="崭新度">
+                      <el-input class="book-info-input" v-model="formData.newnessDegree" clearable>
+                        <i slot="suffix" style="font-style: normal;color: #000000;font-weight: bold;line-height: 40px;margin-left: -50px">成</i>
+                      </el-input>
+                    </el-form-item>
                     <el-form-item label="商品种类">
                       <el-select class="book-info-input" v-model="formData.goodsCategory" placeholder="请选择">
                         <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -47,7 +52,7 @@
                       <el-input class="book-info-input" v-model="formData.goodsIntroduction" clearable type="textarea" :rows="2"></el-input>
                     </el-form-item>
                   </el-form>
-                  <el-button @click="nextStep" style="margin-top: 10px">下一步</el-button>
+                  <el-button @click="nextStep" style="margin-top: 3px">下一步</el-button>
                 </div>
                 <!--步骤二-->
                 <div v-show="active === 1">
@@ -141,6 +146,7 @@ export default {
         goodsName: '',
         goodsPrice: '',
         sellNum: '',
+        newnessDegree: '',
         goodsIntroduction: ''
       },
       options: [{
@@ -257,7 +263,7 @@ export default {
 
 .box-body{
   padding: 1px 0;
-  height: 600px;
+  height: 650px;
   background-color: whitesmoke;
 }
 

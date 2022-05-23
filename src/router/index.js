@@ -22,6 +22,14 @@ export default new Router({
       name: 'ForgetPassword',
       component: () => import('@/views/register/forgetPassword')
     }, {
+      path: '/goods',
+      name: 'Goods',
+      component: () => import('@/views/book/goods')
+    }, {
+      path: '/post',
+      name: 'Posy',
+      component: () => import('@/views/Post/post')
+    }, {
       path: '/userHome',
       name: 'userHome',
       component: () => import('@/views/userHome/userHome'),
@@ -112,13 +120,21 @@ export default new Router({
       path: '/communicate',
       name: 'communicate',
       component: () => import('@/views/communicate/communicate')
+    },
+    {
+      path: '/user',
+      name: 'user',
+      component: () => import('@/views/userHome/user')
+    },
+    {
+      path: '/barHome',
+      name: 'BarHome',
+      component: () => import('@/views/Bar/barHome')
+    },
+    {
+      path: '/bar',
+      name: 'Bar',
+      component: () => import('@/views/Bar/bar')
     }
   ]
 })
-
-// 获取原型对象上的push函数
-const originalPush = Router.prototype.push
-// 修改原型对象中的push方法
-Router.prototype.push = function push (location) {
-  return originalPush.call(this, location).catch(err => err)
-}
