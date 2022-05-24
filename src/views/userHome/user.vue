@@ -23,6 +23,41 @@
           </div>
         </div>
         <!--商品信息-->
+        <!--没有求物贴-->
+        <div class="searchBar">
+          <el-empty v-if="bookList.length === 0" description="暂时没有上传过任何商品"></el-empty>
+        </div>
+        <!--有帖子-->
+        <div v-if="bookList.length > 0" class="searchBar">
+          <div>
+            <div style="width: 100%;display: flex;flex-direction: row;flex-wrap: wrap">
+              <div v-for="(item, index) in bookList" :key="index" style="width: 25%">
+                <div style="margin-top: 20px">
+                  <el-card class="card">
+                    <div class="book-title">{{item.goodsName}}</div>
+                    <div style="display: flex" @click="goToBook(item.goodsId)">
+                      <img :src="item.goodsImage" alt="这是一张图片" class="book-img">
+                      <ul class="goods-info">
+                        <li style="margin-top: 5px;font-weight: bolder;color: red;font-size: 18px">￥ {{item.goodsPrice}}</li>
+                        <li style="margin-top: 10px;font-weight: bolder;color: #6A5ACD" v-if="item.newnessDegree<10">{{item.newnessDegree}}成新</li>
+                        <li style="margin-top: 10px;font-weight: bolder;color: #6A5ACD" v-if="item.newnessDegree===10">全新</li>
+                        <li style="text-align: center;margin-top: 30px">剩余：{{item.sellNum}}</li>
+                      </ul>
+                    </div>
+                    <div style="display: flex;margin-top: 10px;margin-left: 30px">
+                      <div style="margin-left: 70px;margin-top: 15px" @click="goToCategory(item.goodsCategory)">
+                        <div  v-if="item.goodsCategory === 'textbook'" class="arrow-line-1">{{getCategoryName(item.goodsCategory)}}</div>
+                        <div  v-if="item.goodsCategory === 'teachingMaterials'" class="arrow-line-2">{{getCategoryName(item.goodsCategory)}}</div>
+                        <div  v-if="item.goodsCategory === 'extracurricularBook'" class="arrow-line-3">{{getCategoryName(item.goodsCategory)}}</div>
+                        <div  v-if="item.goodsCategory === 'rests'" class="arrow-line-4">{{getCategoryName(item.goodsCategory)}}</div>
+                      </div>
+                    </div>
+                  </el-card>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -31,15 +66,16 @@
 <script>
 import NavBar from '../../components/NavBar'
 import Particles from '../../components/Particles'
-import {addCart} from '../../api/cart/cart'
 import {getUserInfo} from '../../api/Home/home'
+import {getSoldGoods} from '../../api/book/sellGoods'
 
 export default {
   name: 'user',
   components: {NavBar, Particles},
   data () {
     return {
-      seller: {}
+      seller: {},
+      bookList: []
     }
   },
   created () {
@@ -50,23 +86,29 @@ export default {
     const userParams = {'userId': id}
     getUserInfo(userParams).then(res => {
       this.seller = res.data
-      console.log(res.data)
+    })
+    const params = {'userId': id}
+    getSoldGoods(params).then(res => {
+      this.bookList = res.data
+      console.log(this.bookList)
     })
   },
   methods: {
-    addCart () {
-      let id
-      id = this.$route.query.id
-      const params = {'goodsId': id, 'count': 1}
-      addCart(params).then(res => {
-        if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
-        else {
-          this.$message.success('添加成功！')
-        }
-      })
-    },
     goToUserDetail (id) {
       this.$router.push(`/user?id=${id}`)
+    },
+    goToBook (goodsId) {
+      this.$router.push(`/bookDetail?id=${goodsId}`)
+    },
+    getCategoryName (category) {
+      if (category === 'textbook') return '课本'
+      else if (category === 'teachingMaterials') return '教辅资料'
+      else if (category === 'extracurricularBook') return '课外书'
+      else if (category === 'rests') return '其他'
+      else return '暂无'
+    },
+    goToCategory (category) {
+      this.$router.push('goods?category=' + category)
     }
   }
 }
@@ -139,29 +181,96 @@ export default {
   z-index: 1000;
 }
 
-.book-user-info {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  z-index: 1000;
-}
 .book-desc span:nth-of-type(2){
   /*font-size: 14px;*/
   z-index: 1000;
-}
-
-.album-tabs-wrap {
-  margin-top: -20px;
-  z-index: 1000;
-  width: 400px;
 }
 
 .el-table td, .el-table th.is-leaf {
   border-bottom: none;
   z-index: 1000;
 }
-.router-link-active {
-  text-decoration: none;
-  color: teal;
+.searchBar{
+  margin-top: 20px;
+}
+.card{
+  width: 320px;
+  height: 270px;
+  margin-left: 10px;
+}
+.book-title{
+  font-weight: bolder;
+}
+.book-img{
+  display: flex;
+  flex-direction: column;
+  margin-left: 60px;
+  margin-top: 10px;
+  width: 130px;
+  height: 150px;
+}
+.goods-info {
+  margin-left: -15px;
+  list-style:none;
+}
+.arrow-line-1 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: tomato;
+  color: #F9F0DA;
+}
+.arrow-line-1::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: tomato;
+
+}
+.arrow-line-2 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: teal;
+  color: #F9F0DA;
+}
+.arrow-line-2::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: teal;
+
+}
+.arrow-line-3 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: purple;
+  color: #F9F0DA;
+}
+.arrow-line-3::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: purple;
+
+}
+.arrow-line-4 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: cornflowerblue;
+  color: #F9F0DA;
+}
+.arrow-line-4::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: cornflowerblue;
+
 }
 </style>

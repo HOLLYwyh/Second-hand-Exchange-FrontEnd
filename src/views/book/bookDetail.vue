@@ -13,12 +13,12 @@
             <div class="book-name">
               <div class="tag1">{{getCategoryName(details.goodsCategory)}}</div>{{details.goodsName}}
               <div class="el-icon-star-on" v-show="favoriteVisible" @click="favorite(1)"></div>
-              <div class="el-icon-star-off" v-show="cancelFavoriteVisible" @click="favorite(0)"></div>
+              <div class="el-icon-star-off" v-show="!favoriteVisible" @click="favorite(0)"></div>
               <img src="../../assets/detailIcon/ContactService.png" alt="联系客服" style="width: 30px;height: 30px">
             </div>
             <div class="book-user-info">
               <div class="book-create-time">
-                <span>共{{details.goodsFavorite}}人点赞</span>
+                <span>共{{details.goodsLike}}人点赞</span>
               </div>
             </div>
             <div>
@@ -72,7 +72,7 @@
 <script>
 import NavBar from '../../components/NavBar'
 import Particles from '../../components/Particles'
-import {bookDetail} from '../../api/book/bookDetail'
+import {bookDetail, bookFavorite} from '../../api/book/bookDetail'
 import {addCart} from '../../api/cart/cart'
 import {getUserInfo} from '../../api/Home/home'
 
@@ -84,8 +84,8 @@ export default {
       details: {},
       seller: {},
       favoriteVisible: false,
-      cancelFavoriteVisible: true,
-      detailInfo: []
+      detailInfo: [],
+      id: 0
     }
   },
   created () {
@@ -93,6 +93,7 @@ export default {
     let id = 0
     if (this.$route.query.id === undefined) id = 7
     else id = this.$route.query.id
+    this.id = id
     const params = {'goodsId': id}
     bookDetail(params).then(res => {
       if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
@@ -106,6 +107,7 @@ export default {
           this.seller['image'] = re.data.userImage
           this.seller['name'] = re.data.userName
           this.seller['id'] = re.data.userId
+          this.favoriteVisible = res.data.isLiked
         })
       }
     })
@@ -120,12 +122,22 @@ export default {
     },
     favorite (status) {
       if (status === 0) {
+        // 点赞
         this.favoriteVisible = true
-        this.cancelFavoriteVisible = false
+        this.details.goodsLike++
+        const params = {'goodsId': this.id, 'favorite': 1}
+        bookFavorite(params).then(res => {
+          console.log(res)
+        })
         this.$forceUpdate()
       } else if (status === 1) {
+        // 撤销点赞
         this.favoriteVisible = false
-        this.cancelFavoriteVisible = true
+        this.details.goodsLike--
+        const params = {'goodsId': this.id, 'favorite': 0}
+        bookFavorite(params).then(res => {
+          console.log(res)
+        })
         this.$forceUpdate()
       }
     },

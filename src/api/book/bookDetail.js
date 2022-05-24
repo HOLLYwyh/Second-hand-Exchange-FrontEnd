@@ -7,3 +7,12 @@ export function bookDetail (params) {
     params
   })
 }
+
+export function bookFavorite (params) {
+  return request({
+    url: '/likeGoods/like',
+    method: 'post',
+    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    data: JSON.stringify(params)
+  })
+}
