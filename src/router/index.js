@@ -117,7 +117,7 @@ export default new Router({
       component: () => import('@/views/book/shelveBook')
     },
     {
-      path: '/communicate',
+      path: '/communicate/:toUserId',
       name: 'communicate',
       component: () => import('@/views/communicate/communicate')
     },

@@ -32,7 +32,7 @@
         <div style="margin-top: 20px;display: flex;justify-content: center;margin-left: 100px">
           <el-button type="success" @click="addCart()">加入购物车</el-button>
           <el-button type="primary">立即购买</el-button>
-          <el-button type="danger">联系卖家</el-button>
+          <el-button type="danger" @click="jump('communicate')">联系卖家</el-button>
         </div>
         <!--商品信息-->
         <div style="width: 100%;display: flex;flex-direction: row;flex-wrap: wrap;margin-top: 40px">
@@ -142,6 +142,12 @@ export default {
     },
     goToUserDetail (id) {
       this.$router.push(`/user?id=${id}`)
+    },
+    jump (name) {
+      this.$router.push({
+        name: name, params: {toUserId: this.seller.id}
+
+      })
     }
   }
 }
