@@ -50,6 +50,20 @@ export default new Router({
           ]
         },
         {
+          path: '/userHome/mySoldOrder',
+          name: 'mySoldOrder',
+          component: () => import('@/views/userHome/mySoldOrder'),
+          meta: {title: '我卖出的'},
+          children: [
+            {
+              path: '/userHome/soldOrder/:orderId',
+              name: 'soldOrderDetail',
+              component: () => import('@/views/payment/orderDetail'),
+              meta: {title: '订单详情'}
+            }
+          ]
+        },
+        {
           path: '/userHome/myChart',
           name: 'myChart',
           component: () => import('@/views/userHome/myCart'),

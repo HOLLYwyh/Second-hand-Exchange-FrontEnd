@@ -49,6 +49,8 @@
 </template>
 
 <script>
+/* eslint-disable */
+
 import NavBarWithoutRouterView from '../../components/NavBarWithoutRouterView'
 import {getUserInfo} from '../../api/Home/home'
 export default {
@@ -81,7 +83,7 @@ export default {
 
     initWebSoket () {
       if ('WebSocket' in window) {
-        this.webSocket = new WebSocket('ws://localhost:8081/websocket/' + this.$route.params.toUserId + '/' + sessionStorage.getItem('userID'))
+        this.webSocket = new WebSocket('ws://81.69.225.235:8081/websocket/' + this.$route.params.toUserId + '/' + sessionStorage.getItem('userID'))
         this.webSocket.onopen = function () {
           // webSocket.send( document.getElementById('username').value+"已经上线了");
           console.log('已经连通了websocket')

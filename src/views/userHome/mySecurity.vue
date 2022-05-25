@@ -8,10 +8,18 @@
       <el-col :span="8" :offset="8" class="border-style">
         <br />
         <el-row class="margin-inner-style">
+          <div style="float: left;font-size: x-small;">
+            <el-upload
+              class="avatar-uploader"
+              action=""
+              :show-file-list="false"
+              :auto-upload= "false"
+              :on-change = "handleChange">
+              <img v-if="user.userImage !== null" :src="user.userImage" style="width: 50%;border-radius: 50%">
+              <!--                <i class="el-icon-plus avatar-uploader-icon"></i>-->
+            </el-upload>
+          </div>
           <el-col :span="12">
-            <div style="float: left;font-size: x-small">
-              <img :src="user.userImage"/>
-            </div>
           </el-col>
           <el-col :span="12" >
           </el-col>
@@ -58,7 +66,7 @@
           <el-col :span="24">
             <div style="float: left;font-size: x-small">
               <p><b>保护您的帐户安全</b></p>
-              <p>如果您认为您的帐户已被盗用，请修改密码与邮箱以提高您帐户的安全性。</p>
+              <p>如果您认为您的帐户已被盗用，请修改密码以提高您帐户的安全性。</p>
             </div>
           </el-col>
         </el-row>
@@ -71,6 +79,7 @@
 <script>
 import BreadCrumb from '../../components/BreadCrumb'
 import request from '../../utils/request'
+import {changeAvatar} from '../../api/userHome/userHome'
 export default {
   name: 'mySecurity',
   components: {
@@ -78,14 +87,27 @@ export default {
   },
   data () {
     return {
-
-      user: null
+      user: null,
+      fileList: []
     }
   },
   methods: {
     jumpTo (path) {
       // console.log(path)
       this.$router.push({path: path})
+    },
+    handleChange (file) {
+      let fileType = file.name.substring(file.name.lastIndexOf('.') + 1)
+      if (fileType === 'jpg' || fileType === 'png') {
+        let formData = new FormData()
+        formData.append('files', file.raw)
+        changeAvatar(formData).then(res => {
+          this.user = res.data
+          console.log(res)
+        })
+      } else {
+        this.$message.error('只能上传jpa或png类型图片！')
+      }
     }
   },
   mounted () {

@@ -41,3 +41,9 @@ export function getOrderDetail (params) {
     params: params
   })
 }
+export function getSoldOrder () {
+  return request({
+    url: 'order/getOrderSold',
+    method: 'get'
+  })
+}
