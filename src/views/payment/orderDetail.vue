@@ -100,8 +100,8 @@
 
         </div>
         <br />
-        <el-button type="primary"> 联系卖家 </el-button>
-        <el-button type="primary"> 投诉卖家 </el-button>
+<!--        <el-button type="primary"> 联系卖家 </el-button>-->
+<!--        <el-button type="primary"> 投诉卖家 </el-button>-->
         <br />
 
       </div>

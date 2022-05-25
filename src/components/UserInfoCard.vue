@@ -8,8 +8,22 @@
             <img src="../assets/usrHomeIcon/order.png" class="img-style" />
           </el-col>
           <el-col :span="15">
-            <p><b>我的订单</b></p>
+            <p><b>我买到的</b></p>
             <p style="font-size: small">追踪、退货、再次购买</p>
+          </el-col>
+        </el-row>
+      </el-card>
+    </el-col>
+
+    <el-col :span="8" class="card-style" >
+      <el-card class="card-content" @click.native="jumpTo('/userHome/mySoldOrder')">
+        <el-row>
+          <el-col :span="9">
+            <img src="../assets/usrHomeIcon/10.jpg" class="img-style" />
+          </el-col>
+          <el-col :span="15">
+            <p><b>我卖出的</b></p>
+            <p style="font-size: small">管理卖出的订单</p>
           </el-col>
         </el-row>
       </el-card>

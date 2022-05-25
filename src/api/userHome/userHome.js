@@ -24,3 +24,12 @@ export function getUserInfo () {
     headers: { 'Content-Type': 'application/json;charset=UTF-8' }
   })
 }
+
+export function changeAvatar (params) {
+  return request({
+    url: 'user/changeImage',
+    method: 'post',
+    data: params,
+    headers: {'Content-Type': 'multipart/form-data'}
+  })
+}
