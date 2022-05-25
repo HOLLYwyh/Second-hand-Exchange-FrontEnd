@@ -31,7 +31,7 @@
         </div>
         <div style="margin-top: 20px;display: flex;justify-content: center;margin-left: 100px">
           <el-button type="success" @click="addCart()" v-if="canBuy">加入购物车</el-button>
-          <el-button type="primary" v-if="canBuy">立即购买</el-button>
+<!--          <el-button type="primary" v-if="canBuy">立即购买</el-button>-->
           <el-button type="danger" @click="jump('communicate')">联系卖家</el-button>
         </div>
         <!--商品信息-->

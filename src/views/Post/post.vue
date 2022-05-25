@@ -79,7 +79,7 @@
                             <div style="font-style:oblique">求物者</div>
                             <div style="margin-top: 10px;font-style:oblique">{{item.userName}}</div>
                           </div>
-                          <el-button type="prime" style="margin-left: 50px">联系TA</el-button>
+                          <el-button type="primary" style="margin-left: 50px" v-if="myId !== item.userId" @click="jump(item.userId)">联系TA</el-button>
                         </div>
                       </el-card>
                     </div>
@@ -140,7 +140,8 @@ export default {
       dialogVisible: false,
       labelPosition: 'right',
       formData: {postName: '', postPrice: '', postIntroduction: ''},
-      fileList: []
+      fileList: [],
+      myId: 6
     }
   },
   created () {
@@ -161,6 +162,7 @@ export default {
     })
     myPostAPI().then(res => {
       this.myPostList = res.data
+      if (res.data.length > 0) this.myId = res.data[0].userId
     })
   },
   methods: {
@@ -215,6 +217,12 @@ export default {
     },
     goToUserDetail (id) {
       this.$router.push(`/user?id=${id}`)
+    },
+    jump (userId) {
+      this.$router.push({
+        name: 'communicate', params: {toUserId: userId}
+
+      })
     }
   }
 }
