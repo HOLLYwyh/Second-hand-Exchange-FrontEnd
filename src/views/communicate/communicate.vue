@@ -137,6 +137,9 @@ export default {
         this.webSocket.onclose = function () {
           console.log('连接已关闭...')
         }
+        this.webSocket.onerror = function (err) {
+          console.log(err)
+        }
       }
     },
     send () {
