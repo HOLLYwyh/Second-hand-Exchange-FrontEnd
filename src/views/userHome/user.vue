@@ -41,7 +41,8 @@
                         <li style="margin-top: 5px;font-weight: bolder;color: red;font-size: 18px">￥ {{item.goodsPrice}}</li>
                         <li style="margin-top: 10px;font-weight: bolder;color: #6A5ACD" v-if="item.newnessDegree<10">{{item.newnessDegree}}成新</li>
                         <li style="margin-top: 10px;font-weight: bolder;color: #6A5ACD" v-if="item.newnessDegree===10">全新</li>
-                        <li style="text-align: center;margin-top: 30px">剩余：{{item.sellNum}}</li>
+                        <li v-if="item.sellNum > 0" style="text-align: center;margin-top: 30px">剩余：{{item.sellNum}}</li>
+                        <li v-if="item.sellNum === 0" style="text-align: center;margin-top: 30px;font-weight: bolder;color: red">已售罄</li>
                       </ul>
                     </div>
                     <div style="display: flex;margin-top: 10px;margin-left: 30px">

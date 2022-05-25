@@ -23,8 +23,15 @@
             </div>
           </div>
         </div>
-        <div style="margin-top: -20px;display: flex;justify-content: center;margin-left: 100px">
-          <el-button type="primary" @click="createPostBar()">发布消息</el-button>
+        <div style="display: flex;justify-content: center;margin-left: 100px">
+          <el-button type="primary" @click="createPost()">发布消息</el-button>
+          <el-dialog title="发布消息" :visible.sync="dialogVisible" width="30%" style="z-index: 2000">
+            <span>请填写如下内容：</span>
+            <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="confirmCreatePost">确 定</el-button>
+          </span>
+          </el-dialog>
         </div>
         <!--讨论区没有帖子-->
         <div class="searchBar">
@@ -59,15 +66,19 @@ export default {
     return {
       barList: [],
       bar: {name: '孙笑川吧', introduction: '一眼丁真，鉴定为寄', image: require('../../assets/detailIcon/communicate.jpeg')},
-      favoriteVisible: false
+      favoriteVisible: false,
+      dialogVisible: false
     }
   },
   created () {
     if (window.sessionStorage.getItem('userID') === null) this.$router.push('/')
   },
   methods: {
-    createPostBar () {
-      console.log('创建讨论区')
+    createPost () {
+      this.dialogVisible = true
+    },
+    confirmCreatePost () {
+      this.dialogVisible = false
     }
   }
 }
