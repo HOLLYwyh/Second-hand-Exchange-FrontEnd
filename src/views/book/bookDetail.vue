@@ -30,8 +30,8 @@
           </div>
         </div>
         <div style="margin-top: 20px;display: flex;justify-content: center;margin-left: 100px">
-          <el-button type="success" @click="addCart()">加入购物车</el-button>
-          <el-button type="primary">立即购买</el-button>
+          <el-button type="success" @click="addCart()" v-if="canBuy">加入购物车</el-button>
+          <el-button type="primary" v-if="canBuy">立即购买</el-button>
           <el-button type="danger" @click="jump('communicate')">联系卖家</el-button>
         </div>
         <!--商品信息-->
@@ -85,7 +85,8 @@ export default {
       seller: {},
       favoriteVisible: false,
       detailInfo: [],
-      id: 0
+      id: 0,
+      canBuy: true
     }
   },
   created () {
@@ -102,8 +103,13 @@ export default {
         console.log(res.data)
         let params1 = {'userId': res.data.userId}
         getUserInfo(params1).then(re => {
+          let sellNum = 0
+          if (res.data.sellNum === 0) {
+            sellNum = '已售罄'
+            this.canBuy = false
+          } else sellNum = res.data.sellNum
           this.detailInfo.push({title: '价格', content: res.data.goodsPrice + '￥'}, {title: '崭新度', content: res.data.newnessDegree + '成新'},
-            {title: '上架时间', content: res.data.goodsDate.substring(0, 10)}, {title: '剩余数量', content: res.data.sellNum})
+            {title: '上架时间', content: res.data.goodsDate.substring(0, 10)}, {title: '剩余数量', content: sellNum})
           this.seller['image'] = re.data.userImage
           this.seller['name'] = re.data.userName
           this.seller['id'] = re.data.userId

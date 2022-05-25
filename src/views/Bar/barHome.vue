@@ -19,8 +19,15 @@
             </div>
           </div>
         </div>
-        <div style="margin-top: -20px;display: flex;justify-content: center;margin-left: 100px">
+        <div style="display: flex;justify-content: center;margin-left: 100px">
           <el-button type="primary" @click="createPostBar()">创建讨论区</el-button>
+          <el-dialog title="创建讨论区" :visible.sync="dialogVisible" width="30%" style="z-index: 2000">
+            <span>请填写如下信息：</span>
+            <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="confirmCreatePostBar">确 定</el-button>
+          </span>
+          </el-dialog>
         </div>
         <!--帖子信息-->
         <el-tabs v-model="activeName">
@@ -80,7 +87,8 @@ export default {
       barList: [],
       myBarList: [],
       introduction: '欢迎每一位同学在交流社区中建立讨论区或参与讨论，分享读书经验',
-      activeName: 'first'
+      activeName: 'first',
+      dialogVisible: false
     }
   },
   created () {
@@ -88,7 +96,10 @@ export default {
   },
   methods: {
     createPostBar () {
-      console.log('创建讨论区')
+      this.dialogVisible = true
+    },
+    confirmCreatePostBar () {
+      this.dialogVisible = false
     }
   }
 }
