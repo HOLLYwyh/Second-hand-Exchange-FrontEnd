@@ -35,8 +35,8 @@
       <div style="width: 75%;">
         <div style="height: 500px;overflow-y:auto">
           <el-row v-for="(item,index) in msgs" :key="index">
-            <div v-if="item.fromUserId === fromUserID" style="float: right;background: #9DC068;padding: 10px;margin: 10px;border-radius: 10px">{{item.msg}}</div>
-            <div v-if="item.fromUserId === toUserID " style="float: left;background: #409eff;padding: 10px;margin: 10px;border-radius: 10px">{{item.msg}}</div>
+            <div v-if="item.fromUserId == fromUserID" style="float: right;background: #9DC068;padding: 10px;margin: 10px;border-radius: 10px">{{item.msg}}</div>
+            <div v-if="item.fromUserId == toUserID " style="float: left;background: #409eff;padding: 10px;margin: 10px;border-radius: 10px">{{item.msg}}</div>
           </el-row>
         </div>
         <div style="margin-top: 10px">
@@ -73,10 +73,8 @@ export default {
   methods: {
     async getSellerInfo () {
       let id = this.$route.params.toUserId
-      console.log(id)
       const userParams = {'userId': id}
       await getUserInfo(userParams).then(res => {
-        console.log(res)
         this.seller = res.data
       })
     },
@@ -97,20 +95,20 @@ export default {
             console.log(this.userList)
             for (var i = 1; i < obj.length; i++) {
               this.userList.push(obj[i].user)
-              if (obj[i].user.userId === this.toUserID || obj[i].user.userId === this.fromUserID) {
+              if (obj[i].user.userId == this.toUserID || obj[i].user.userId == this.fromUserID) {
                 this.msgs = obj[i].msg
                 console.log(this.msgs)
               }
             }
             console.log(this.userList)
           } else {
-            if (obj[1].msg.fromUserId === this.fromUserID && obj[1].msg.toUserId === this.toUserID) {
+            if (obj[1].msg.fromUserId == this.fromUserID && obj[1].msg.toUserId == this.toUserID) {
               this.msgs.push(obj[1].msg)
-            } else if (obj[1].msg.fromUserId === this.toUserID && obj[1].msg.toUserId === this.fromUserID) {
+            } else if (obj[1].msg.fromUserId == this.toUserID && obj[1].msg.toUserId == this.fromUserID) {
               this.msgs.push(obj[1].msg)
             } else {
               var index = this.userList.find((item, index) => {
-                return obj[1].msg.fromUserId === item.userId
+                return obj[1].msg.fromUserId == item.userId
               })
               console.log(index)
               if (index !== undefined) {
@@ -143,7 +141,6 @@ export default {
     send () {
       var message = this.text
       this.webSocket.send(message)
-      console.log(this.text)
       this.text = ''
     },
     jump (id) {
@@ -158,8 +155,8 @@ export default {
   mounted () {
     this.toUserID = this.$route.params.toUserId
     this.fromUserID = sessionStorage.getItem('userID')
-    console.log(this.toUserId)
-    console.log(this.fromUserID)
+    console.log("toUserId:"+this.toUserId)
+    console.log("fromUserId:" +this.fromUserID)
 
     this.getSellerInfo()
     this.initWebSoket()
