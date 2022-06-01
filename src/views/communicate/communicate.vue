@@ -144,7 +144,7 @@ export default {
       this.text = ''
     },
     jump (id) {
-      if (id !== this.toUserID) {
+      if (id != this.toUserID) {
         this.$router.push({
           name: 'communicate', params: {toUserId: id}
         })
