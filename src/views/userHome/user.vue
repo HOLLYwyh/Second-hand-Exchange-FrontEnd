@@ -12,7 +12,7 @@
           <div class="book-info">
             <div class="book-name">
               <div class="tag1">卖家</div>{{seller.userName}}
-              <img src="../../assets/detailIcon/ContactService.png" alt="联系客服" style="width: 30px;height: 30px">
+              <img v-if="seller.userId !== this.myId" @click="jump('communicate')" src="../../assets/detailIcon/ContactService.png" alt="联系客服" style="width: 30px;height: 30px">
             </div>
             <div>
               <el-card style="margin-top: 10px;max-height: 140px;background: transparent;text-justify: inter-ideograph;overflow: auto;">
@@ -38,6 +38,7 @@
                     <div style="display: flex" @click="goToBook(item.goodsId)">
                       <img :src="item.goodsImage" alt="这是一张图片" class="book-img">
                       <ul class="goods-info">
+                        <li style="text-decoration: line-through;margin-top: 5px;font-weight: bolder;color: gray">￥ {{item.originalPrice}}</li>
                         <li style="margin-top: 5px;font-weight: bolder;color: red;font-size: 18px">￥ {{item.goodsPrice}}</li>
                         <li style="margin-top: 10px;font-weight: bolder;color: #6A5ACD" v-if="item.newnessDegree<10">{{item.newnessDegree}}成新</li>
                         <li style="margin-top: 10px;font-weight: bolder;color: #6A5ACD" v-if="item.newnessDegree===10">全新</li>
@@ -45,7 +46,7 @@
                         <li v-if="item.sellNum === 0" style="text-align: center;margin-top: 30px;font-weight: bolder;color: red">已售罄</li>
                       </ul>
                     </div>
-                    <div style="display: flex;margin-top: 10px;margin-left: 30px">
+                    <div style="display: flex;margin-left: 30px">
                       <div style="margin-left: 70px;margin-top: 15px" @click="goToCategory(item.goodsCategory)">
                         <div  v-if="item.goodsCategory === 'textbook'" class="arrow-line-1">{{getCategoryName(item.goodsCategory)}}</div>
                         <div  v-if="item.goodsCategory === 'teachingMaterials'" class="arrow-line-2">{{getCategoryName(item.goodsCategory)}}</div>
@@ -76,7 +77,8 @@ export default {
   data () {
     return {
       seller: {},
-      bookList: []
+      bookList: [],
+      myId: 0
     }
   },
   created () {
@@ -84,6 +86,7 @@ export default {
     let id = 0
     if (this.$route.query.id === undefined) id = 6
     else id = this.$route.query.id
+    this.myId = parseInt(sessionStorage.getItem('userID'))
     const userParams = {'userId': id}
     getUserInfo(userParams).then(res => {
       this.seller = res.data
@@ -91,7 +94,16 @@ export default {
     const params = {'userId': id}
     getSoldGoods(params).then(res => {
       this.bookList = res.data
-      console.log(this.bookList)
+      const tempList = []
+      this.bookList.forEach(function (item, index, arr) {
+        if (item.sellNum === 0) {
+          tempList.push(item)
+          arr.splice(index, 1)
+        }
+      })
+      for (let i = 0; i < tempList.length; i++) {
+        this.bookList.push(tempList[i])
+      }
     })
   },
   methods: {
@@ -110,6 +122,12 @@ export default {
     },
     goToCategory (category) {
       this.$router.push('goods?category=' + category)
+    },
+    jump (name) {
+      this.$router.push({
+        name: name, params: {toUserId: this.seller.userId}
+
+      })
     }
   }
 }

@@ -27,6 +27,7 @@
                     <div style="display: flex" @click="goToBook(item.bookList[goodsIndexList[index]+id].goodsId)">
                       <img :src=item.bookList[goodsIndexList[index]+id].goodsImage alt="这是一张图片" class="book-img">
                       <ul class="goods-info">
+                        <li style="text-decoration: line-through;margin-top: 5px;font-weight: bolder;color: gray">￥ {{item.bookList[goodsIndexList[index]+id].originalPrice}}</li>
                         <li style="margin-top: 5px;font-weight: bolder;color: red;font-size: 18px">￥ {{item.bookList[goodsIndexList[index]+id].goodsPrice}}</li>
                         <li style="margin-top: 10px;font-weight: bolder;color: #6A5ACD" v-if="item.bookList[goodsIndexList[index]+id].newnessDegree<10">{{item.bookList[goodsIndexList[index]+id].newnessDegree}}成新</li>
                         <li style="margin-top: 10px;font-weight: bolder;color: #6A5ACD" v-if="item.bookList[goodsIndexList[index]+id].newnessDegree===10">全新</li>
@@ -191,7 +192,7 @@ export default {
   margin-top: 30px;
 }
 .card{
-  height: 270px;
+  height: 300px;
   width: 250px;
 }
 .pagination{

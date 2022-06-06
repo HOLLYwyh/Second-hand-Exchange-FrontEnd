@@ -66,7 +66,7 @@
                       <el-card class="card">
                         <div class="book-title">{{item.barName}}</div>
                         <div style="display: flex">
-                          <img :src="item.postImages" alt="这是一张图片" class="book-img">
+                          <img :src="item.barImages" alt="这是一张图片" class="book-img">
                           <ul class="goods-info">
                             <li style="margin-top: 5px;font-weight: bolder;color: #6A5ACD">{{item.barDate.substring(0,10)}}</li>
                             <li style="text-align: center;margin-top: 10px">{{item.barIntroduction}}</li>
@@ -92,7 +92,7 @@
           <el-tab-pane label="我的" name="second">
             <!--没有求物贴-->
             <div class="searchBar">
-              <el-empty v-if="myBarList.length === 0" description="您暂时没有参加任何讨论区"></el-empty>
+              <el-empty v-if="myBarList.length === 0" description="您暂时没有创建或参加任何讨论区"></el-empty>
             </div>
             <!--有帖子-->
             <div v-if="myBarList.length > 0" class="searchBar">
@@ -103,7 +103,7 @@
                       <el-card class="card">
                         <div class="book-title">{{item.barName}}</div>
                         <div style="display: flex">
-                          <img :src="item.postImages" alt="这是一张图片" class="book-img">
+                          <img :src="item.barImages" alt="这是一张图片" class="book-img">
                           <ul class="goods-info">
                             <li style="margin-top: 5px;font-weight: bolder;color: #6A5ACD">{{item.barDate.substring(0,10)}}</li>
                             <li style="text-align: center;margin-top: 10px">{{item.barIntroduction}}</li>
@@ -112,7 +112,10 @@
                         <div style="display: flex;margin-top: 10px;margin-left: 30px">
                           <div style="margin-top: 15px">
                             <div class="arrow-line-4">{{item.barCategory}}</div>
-  </div>
+                          </div>
+                          <div style="margin-top: 15px;margin-left: 30px">
+                            <div class="arrow-line-1">{{item.category}}</div>
+                          </div>
                         </div>
                       </el-card>
                     </div>
@@ -130,7 +133,7 @@
 <script>
 import NavBar from '../../components/NavBar'
 import Particles from '../../components/Particles'
-import {myBarAPI, allBarAPI, addBarAPI} from '../../api/bar/barAPI'
+import {myBarAPI, allBarAPI, addBarAPI, relatedBar} from '../../api/bar/barAPI'
 import {getUserInfo} from '../../api/Home/home'
 
 export default {
@@ -151,10 +154,9 @@ export default {
   },
   created () {
     if (window.sessionStorage.getItem('userID') === null) this.$router.push('/')
+    this.myId = parseInt(sessionStorage.getItem('userID'))
     const param = { pageNumber: 0, pageSize: 1600 }
     allBarAPI(param).then(res => {
-      console.log('广场讨论区')
-      console.log(res.data)
       this.barList = res.data
       for (let i = 0; i < this.barList.length; i++) {
         const userParam = {'userId': res.data[i].userId}
@@ -165,11 +167,27 @@ export default {
         })
       }
     })
+
     myBarAPI().then(res => {
-      console.log('我的讨论区')
-      console.log(res.data)
       this.myBarList = res.data
-      if (res.data.length > 0) this.myId = res.data[0].userId
+      for (let i = 0; i < res.data.length; i++) {
+        this.myBarList[i]['category'] = '创建'
+      }
+      relatedBar().then(re => {
+        for (let i = 0; i < re.data.length; i++) {
+          let tag = true
+          for (let j = 0; j < this.myBarList.length; j++) {
+            if (this.myBarList[j].barId === re.data[i].barId) {
+              tag = false
+              break
+            }
+          }
+          if (tag) {
+            re.data[i]['category'] = '参与'
+            this.myBarList.push(re.data[i])
+          }
+        }
+      })
     })
   },
   methods: {
@@ -335,6 +353,21 @@ export default {
 .goods-info {
   margin-left: -15px;
   list-style:none;
+}
+.arrow-line-1 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: tomato;
+  color: #F9F0DA;
+}
+.arrow-line-1::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: tomato;
+
 }
 .arrow-line-4 {
   position: relative;

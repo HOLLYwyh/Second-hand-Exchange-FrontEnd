@@ -20,7 +20,7 @@
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="accountInfo" @click.native="toUserHome()">账号信息</el-dropdown-item>
-              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+              <el-dropdown-item command="logout" @click.native="logout()">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </li>
@@ -79,6 +79,14 @@ export default {
     },
     goToUserDetail () {
       this.$router.push(`/user?id=${this.user.userId}`)
+    },
+    logout () {
+      sessionStorage.removeItem('userID')
+      sessionStorage.removeItem('userEmail')
+      sessionStorage.removeItem('userName')
+      sessionStorage.removeItem('tokenName')
+      sessionStorage.removeItem('tokenValue')
+      this.$router.push('/')
     }
   }
 }
