@@ -114,7 +114,7 @@ export default {
 }
 .card{
   width: 350px;
-  height: 270px;
+  height: 300px;
   margin-left: 20px
 }
 .book-title{
