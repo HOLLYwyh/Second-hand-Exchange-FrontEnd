@@ -14,7 +14,7 @@
           </el-table-column>
           <el-table-column prop="goodsName" align="center">
             <template slot-scope="scope">
-              <span class="shop">{{scope.row.goodsName}}</span>
+              <span class="shop" style="cursor: pointer" @click="jump(scope.row)">{{scope.row.goodsName}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="goodsPrice" label="单价" align="center">
@@ -55,7 +55,7 @@
 
 <script>
 import BreadCrumb from '../../components/BreadCrumb'
-import {getCart} from '../../api/cart/cart'
+import {delCart, getCart} from '../../api/cart/cart'
 
 export default {
   name: 'myChart',
@@ -75,14 +75,23 @@ export default {
       localStorage.setItem('orderGoodList', JSON.stringify(this.multipleSelection))
       this.$router.push('/createOrder')
     },
-    handleDelete (index, row) {
+    async handleDelete (index, row) {
       this.$confirm('确定删除该商品？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
+      }).then(async () => {
         // 删除数组中指定的元素
         this.items.splice(index, 1)
+        const params = {
+          'shoppingCartId': sessionStorage.getItem('userID'),
+          'goodsId': row.goodsId,
+          'count': 0
+        }
+
+        await delCart(params).then(result => {
+          console.log(result)
+        })
         this.$message({
           type: 'success',
           message: '删除成功!'
@@ -103,7 +112,7 @@ export default {
       // 增加商品数量也需要重新计算商品总价
       this.handleCheckedChange(this.multipleSelection)
     },
-    add (addGood) {
+    async add (addGood) {
       // 输入框输入值变化时会变为字符串格式返回到js
       // 此处要用v-model，实现双向数据绑定
       if (typeof addGood.count === 'string') {
@@ -112,22 +121,36 @@ export default {
       if (addGood.count < addGood.sellNum) {
         addGood.count += 1
         addGood.totalPrice = (addGood.count * addGood.goodsPrice).toFixed(2)// 保留两位小数
+        // eslint-disable-next-line standard/object-curly-even-spacing
+        const params = {'shoppingCartId': sessionStorage.getItem('userID'), 'goodsId': addGood.goodsId, 'count': addGood.count }
+
+        await delCart(params).then(result => {
+          console.log(result)
+        })
         this.handleCheckedChange(this.multipleSelection)
       }
     },
-    del (delGood) {
+    async del (delGood) {
       if (typeof delGood.count === 'string') {
         delGood.count = parseInt(delGood.count)
       };
+      console.log(delGood)
+      // eslint-disable-next-line standard/object-curly-even-spacing
       if (delGood.count > 1) {
         delGood.count -= 1
         delGood.totalPrice = (delGood.count * delGood.goodsPrice).toFixed(2)// 保留两位小数
+        // eslint-disable-next-line standard/object-curly-even-spacing
+        const params = {'shoppingCartId': sessionStorage.getItem('userID'), 'goodsId': delGood.goodsId, 'count': delGood.count }
+
+        await delCart(params).then(result => {
+          console.log(result)
+        })
         this.handleCheckedChange(this.multipleSelection)
       }
     },
     handleCheckedChange (selection) {
-      console.log(selection)
       this.multipleSelection = selection
+      console.log(this.multipleSelection)
       this.price = 0
       // 此处不支持forEach循环，只能用原始方法了
       for (var i = 0; i < selection.length; i++) {
@@ -140,12 +163,15 @@ export default {
     },
     submitCart () {
       this.createOder()
+    },
+    jump (good) {
+      this.$router.push(`/bookDetail?id=${good.goodsId}`)
     }
   },
   mounted () {
     getCart().then(res => {
       this.items = res.data
-      console.log(this.items)
+      console.log(res)
     })
   }
 }

@@ -66,6 +66,38 @@
         </div>
       </div>
     </div>
+    <el-divider>相似推荐</el-divider>
+    <div v-for="(it, id) in details.relatedGoods" :key="id" class="post" >
+      <el-card class="card" shadow="hover" style="cursor: pointer">
+        <div @click="goToBook(it.goodsId)" >
+          <div class="book-title">{{ it.goodsName}}</div>
+          <div style="display: flex">
+            <img :src=it.goodsImages[0] alt="这是一张图片" class="book-img">
+            <ul class="goods-info">
+              <li style="text-decoration: line-through;margin-top: 5px;font-weight: bolder;color: gray">￥ {{it.originalPrice}}</li>
+              <li style="margin-top: 5px;font-weight: bolder;color: red;font-size: 18px">￥ {{it.goodsPrice}}</li>
+              <li style="margin-top: 10px;font-weight: bolder;color: #6A5ACD" v-if="it.newnessDegree<10">{{it.newnessDegree}}成新</li>
+              <li style="margin-top: 10px;font-weight: bolder;color: #6A5ACD" v-if="it.newnessDegree===10">全新</li>
+              <li style="text-align: center;margin-top: 30px">剩余：{{it.sellNum}}</li>
+            </ul>
+          </div>
+        </div>
+<!--        <div style="display: flex;margin-top: 10px">-->
+<!--          <img  style="width: 50px;height: 50px" :src="it.userImage" @click="goToUserDetail(it.userId)">-->
+<!--          <div style="margin-left: 10px" @click="goToUserDetail(it.userId)">-->
+<!--&lt;!&ndash;            <div style="font-style:oblique">提供者</div>&ndash;&gt;-->
+<!--&lt;!&ndash;            <div style="margin-top: 10px;font-style:oblique">{{it.userName}}</div>&ndash;&gt;-->
+<!--          </div>-->
+<!--&lt;!&ndash;          <div style="margin-left: 30px;margin-top: 15px" @click="goToCategory(it.goodsCategory)">&ndash;&gt;-->
+<!--&lt;!&ndash;            <div  v-if="it.goodsCategory === 'textbook'" class="arrow-line-1">{{getCategoryName(it.goodsCategory)}}</div>&ndash;&gt;-->
+<!--&lt;!&ndash;            <div  v-if="it.goodsCategory === 'teachingMaterials'" class="arrow-line-2">{{getCategoryName(it.goodsCategory)}}</div>&ndash;&gt;-->
+<!--&lt;!&ndash;            <div  v-if="it.goodsCategory === 'extracurricularBook'" class="arrow-line-3">{{getCategoryName(it.goodsCategory)}}</div>&ndash;&gt;-->
+<!--&lt;!&ndash;            <div  v-if="it.goodsCategory === 'rests'" class="arrow-line-4">{{getCategoryName(it.goodsCategory)}}</div>&ndash;&gt;-->
+<!--&lt;!&ndash;          </div>&ndash;&gt;-->
+<!--        </div>-->
+      </el-card>
+    </div>
+
   </div>
 </template>
 
@@ -101,6 +133,7 @@ export default {
     bookDetail(params).then(res => {
       if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
       else {
+        console.log(res)
         this.details = res.data
         let params1 = {'userId': res.data.userId}
         getUserInfo(params1).then(re => {
@@ -161,6 +194,10 @@ export default {
     },
     goToUserDetail (id) {
       this.$router.push(`/user?id=${id}`)
+    },
+    goToBook (goodsId) {
+      this.$router.push(`/bookDetail?id=${goodsId}`)
+      location.reload()
     },
     jump (name) {
       this.$router.push({
@@ -263,5 +300,134 @@ export default {
 .router-link-active {
   text-decoration: none;
   color: teal;
+}
+
+.post-container{
+  margin: 4.5rem;
+  word-wrap: break-word;
+  display: flex;
+  justify-content: center;
+}
+.wrap{
+  z-index: 100;
+  width:90%
+}
+.post-box{
+  display:block;
+  background-color: #fff;
+}
+.box-title{
+  height: 0.2rem;
+  background-image: linear-gradient(to right, #CDEB9E , #CDEB9E);
+  margin:0;
+}
+.category{
+  float:left;
+  display: inline-block;
+  position: relative;
+  background-color: #9DC068;
+  color: white;
+  transition: color 0.2s;
+  padding: .4rem 2rem 0.5rem
+}
+
+.box-body{
+  padding: 1px 0;
+  height: 400px;
+  background-color: whitesmoke;
+}
+
+.post{
+  display: inline-block;
+  vertical-align: top;
+
+  width: 17rem;
+  flex-shrink: 0;
+  margin-top: 30px;
+}
+.card{
+  height: 300px;
+  width: 250px;
+}
+.pagination{
+  margin-top: 30px;
+}
+.book-title{
+  font-weight: bolder;
+}
+.book-img{
+  display: flex;
+  margin-left: -10px;
+  margin-top: 10px;
+  width: 130px;
+  height: 150px;
+}
+.router-link-active {
+  text-decoration: none;
+  color: teal;
+}
+.goods-info {
+  margin-left: -15px;
+  list-style:none;
+}
+.arrow-line-1 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: tomato;
+  color: #F9F0DA;
+}
+.arrow-line-1::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: tomato;
+
+}
+.arrow-line-2 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: teal;
+  color: #F9F0DA;
+}
+.arrow-line-2::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: teal;
+
+}
+.arrow-line-3 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: purple;
+  color: #F9F0DA;
+}
+.arrow-line-3::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: purple;
+
+}
+.arrow-line-4 {
+  position: relative;
+  width: 70px;
+  height: 20px;
+  background: cornflowerblue;
+  color: #F9F0DA;
+}
+.arrow-line-4::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  border: 10px solid transparent;
+  border-left-color: cornflowerblue;
+
 }
 </style>

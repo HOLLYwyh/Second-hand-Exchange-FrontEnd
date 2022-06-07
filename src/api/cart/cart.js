@@ -16,3 +16,12 @@ export function getCart () {
     headers: { 'Content-Type': 'application/json;charset=UTF-8' }
   })
 }
+
+export function delCart (params) {
+  return request({
+    url: '/shoppingCart/change',
+    method: 'post',
+    data: JSON.stringify(params),
+    headers: { 'Content-Type': 'application/json;charset=UTF-8' }
+  })
+}
