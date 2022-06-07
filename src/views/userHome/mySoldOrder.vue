@@ -47,9 +47,6 @@
                         <el-row>
                           <el-button class="button-style" type="primary" @click="cancel(item)">取消订单</el-button>
                         </el-row>
-                        <el-row>
-                          <el-button class="button-style" type="primary" @click="receive(item)">确认收货</el-button>
-                        </el-row>
                       </div>
                     </div>
                   </el-col>
@@ -95,9 +92,6 @@
                       </el-row>
                       <el-row>
                         <el-button class="button-style" type="primary" @click="cancel(item)">取消订单</el-button>
-                      </el-row>
-                      <el-row>
-                        <el-button class="button-style" type="primary" @click="receive(item)">确认收货</el-button>
                       </el-row>
                     </div>
                   </el-col>
@@ -258,7 +252,6 @@ export default {
         name: 'soldOrderDetail',
         params: {'orderId': item.orderId}
       })
-      location.reload()
     }
   },
   mounted () {

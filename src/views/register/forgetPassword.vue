@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="Img_Box">
-      <img src="../../assets/login/background.jpg" width="100%" height="100%" />
+      <img src="../../assets/login/bg.png" width="100%" height="100%" />
     </div>
     <div>
       <el-card style="border-radius: 12px" class="IdentitySelectionContainer">

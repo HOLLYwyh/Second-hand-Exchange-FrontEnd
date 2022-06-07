@@ -8,7 +8,7 @@
         <div class="login-title">校园二手书交易平台</div>
         <el-row justify="center" style="margin: 30px 0 10px 0">
           <el-col>
-            <el-form ref="form" :model="form" label-width="40px" :hide-required-asterisk="true" size="medium">
+            <el-form ref="form" :model="form" label-width="60px" :hide-required-asterisk="true" size="medium">
               <el-form-item label="邮箱" class="blackItem" >
                 <el-input v-model="form.email" placeholder="请输入邮箱" clearable autofocus style="width: 230px;"></el-input>
               </el-form-item>
@@ -51,13 +51,25 @@ export default {
       form: {
         email: '',
         password: ''
-      }
+      },
+      verifyCode: ''
     }
   },
   created () {
     if (window.sessionStorage.getItem('tokenValue') !== null) this.$router.push('/index')
+    var str = '1234567890qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM'
+    // eslint-disable-next-line no-unused-vars
+    var res = ''
+    for (var i = 0; i < 4; i++) {
+      // 将得到的结果给字符串，调用随机函数，0最小数，62表示数字加字母的总数
+      res += str[this.random(0, 62)]
+    }
+    this.verifyCode = res
   },
   methods: {
+    random (max, min) {
+      return Math.round(Math.random() * (max - min) + min)
+    },
     login () {
       const params = {'userEmail': this.form.email, 'userPassword': this.form.password}
       loginAPI(params).then(res => {
