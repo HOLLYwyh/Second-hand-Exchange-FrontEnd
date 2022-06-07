@@ -15,9 +15,11 @@
               <img v-if="seller.userId !== this.myId" @click="jump('communicate')" src="../../assets/detailIcon/ContactService.png" alt="联系客服" style="width: 30px;height: 30px">
             </div>
             <div>
-              <el-card style="margin-top: 10px;max-height: 140px;background: transparent;text-justify: inter-ideograph;overflow: auto;">
+              <el-card style="margin-top: 10px;max-height: 180px;background: transparent;text-justify: inter-ideograph;overflow: auto;">
                 <div style="font-weight: bolder">学号：{{seller.studentId}}</div>
                 <div style="font-weight: bolder;margin-top: 30px">邮箱：{{seller.userEmail}}</div>
+                <el-button v-if="seller.userId !== this.myId" @click="jump('communicate')" type="primary" style="margin: 10px">联系TA</el-button>
+
               </el-card>
             </div>
           </div>
