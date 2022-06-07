@@ -217,7 +217,9 @@ export default {
     },
     handleChange (file) {
       let fileType = file.name.substring(file.name.lastIndexOf('.') + 1)
+      console.log(fileType)
       if (fileType === 'jpg' || fileType === 'png') {
+        console.log('11')
         this.fileList.push(file)
       } else {
         this.$message.error('请上传正确类型的文件')
