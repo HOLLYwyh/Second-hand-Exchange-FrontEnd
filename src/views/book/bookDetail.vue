@@ -14,7 +14,7 @@
               <div class="tag1">{{getCategoryName(details.goodsCategory)}}</div>{{details.goodsName}}
               <div class="el-icon-star-on" v-show="favoriteVisible" @click="favorite(1)"></div>
               <div class="el-icon-star-off" v-show="!favoriteVisible" @click="favorite(0)"></div>
-              <img src="../../assets/detailIcon/ContactService.png" alt="联系客服" style="width: 30px;height: 30px">
+              <img v-if="seller.id !== this.myId" @click="jump('communicate')" src="../../assets/detailIcon/ContactService.png" alt="联系客服" style="width: 30px;height: 30px">
             </div>
             <div class="book-user-info">
               <div class="book-create-time">
@@ -32,11 +32,11 @@
         <div style="margin-top: 20px;display: flex;justify-content: center;margin-left: 100px">
           <el-button type="success" @click="addCart()" v-if="canBuy">加入购物车</el-button>
 <!--          <el-button type="primary" v-if="canBuy">立即购买</el-button>-->
-          <el-button type="danger" @click="jump('communicate')">联系卖家</el-button>
+          <el-button type="danger" v-if="seller.id !== this.myId" @click="jump('communicate')">联系卖家</el-button>
         </div>
         <!--商品信息-->
         <div style="width: 100%;display: flex;flex-direction: row;flex-wrap: wrap;margin-top: 40px">
-          <el-card style="width: 400px;margin-left: 200px;height: 300px">
+          <el-card style="width: 400px;margin-left: 200px;height: 350px">
             <div style="font-weight: bolder">商品信息</div>
             <div class="album-tabs-wrap">
               <el-tabs style="z-index: 1000;">
@@ -49,7 +49,7 @@
               </el-tabs>
             </div>
           </el-card>
-          <el-card style="width: 400px;margin-left: 200px;height: 300px">
+          <el-card style="width: 400px;margin-left: 200px;height: 350px">
             <div style="font-weight: bolder">卖家信息</div>
             <div style="margin-top: 20px">
               <div style="display: flex">
@@ -86,6 +86,7 @@ export default {
       favoriteVisible: false,
       detailInfo: [],
       id: 0,
+      myId: 0,
       canBuy: true
     }
   },
@@ -96,11 +97,11 @@ export default {
     else id = this.$route.query.id
     this.id = id
     const params = {'goodsId': id}
+    this.myId = parseInt(sessionStorage.getItem('userID'))
     bookDetail(params).then(res => {
       if (res.data.hasOwnProperty('statusCode')) this.$message.error(res.data.msg)
       else {
         this.details = res.data
-        console.log(res.data)
         let params1 = {'userId': res.data.userId}
         getUserInfo(params1).then(re => {
           let sellNum = 0
@@ -108,7 +109,7 @@ export default {
             sellNum = '已售罄'
             this.canBuy = false
           } else sellNum = res.data.sellNum
-          this.detailInfo.push({title: '价格', content: res.data.goodsPrice + '￥'}, {title: '崭新度', content: res.data.newnessDegree + '成新'},
+          this.detailInfo.push({title: '原价', content: res.data.originalPrice + '￥'}, {title: '价格', content: res.data.goodsPrice + '￥'}, {title: '崭新度', content: res.data.newnessDegree + '成新'},
             {title: '上架时间', content: res.data.goodsDate.substring(0, 10)}, {title: '剩余数量', content: sellNum})
           this.seller['image'] = re.data.userImage
           this.seller['name'] = re.data.userName

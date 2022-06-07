@@ -28,6 +28,11 @@
                     <el-form-item label="商品名称">
                       <el-input class="book-info-input" v-model="formData.goodsName" clearable></el-input>
                     </el-form-item>
+                    <el-form-item label="商品原价">
+                      <el-input class="book-info-input" v-model="formData.originalPrice" clearable>
+                        <i slot="suffix" style="font-style: normal;color: #000000;font-weight: bold;line-height: 40px;margin-left: -50px">元</i>
+                      </el-input>
+                    </el-form-item>
                     <el-form-item label="商品价格">
                       <el-input class="book-info-input" v-model="formData.goodsPrice" clearable>
                         <i slot="suffix" style="font-style: normal;color: #000000;font-weight: bold;line-height: 40px;margin-left: -50px">元</i>
@@ -144,6 +149,7 @@ export default {
       formData: {
         goodsCategory: '',
         goodsName: '',
+        originalPrice: '',
         goodsPrice: '',
         sellNum: '',
         newnessDegree: '',
@@ -263,7 +269,7 @@ export default {
 
 .box-body{
   padding: 1px 0;
-  height: 650px;
+  height: 750px;
   background-color: whitesmoke;
 }
 

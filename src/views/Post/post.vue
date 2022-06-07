@@ -150,7 +150,6 @@ export default {
     allPostAPI(param).then(res => {
       console.log(res.data)
       this.postList = res.data
-      // TODO：这里还需要再修改
       for (let i = 0; i < this.postList.length; i++) {
         const userParam = {'userId': res.data[i].userId}
         getUserInfo(userParam).then(re => {
@@ -184,6 +183,7 @@ export default {
             message: '上传成功',
             type: 'success'
           })
+          location.reload()
         }
       }).catch(error => {
         console.log(error)

@@ -21,6 +21,7 @@
                 <div style="display: flex" @click="goToBook(item.goodsId)">
                   <img :src="item.goodsImage" alt="这是一张图片" class="book-img">
                   <ul class="goods-info">
+                    <li style="text-decoration: line-through;margin-top: 5px;font-weight: bolder;color: gray">￥ {{item.originalPrice}}</li>
                     <li style="margin-top: 5px;font-weight: bolder;color: red;font-size: 18px">￥ {{item.goodsPrice}}</li>
                     <li style="margin-top: 10px;font-weight: bolder;color: #6A5ACD" v-if="item.newnessDegree<10">{{item.newnessDegree}}成新</li>
                     <li style="margin-top: 10px;font-weight: bolder;color: #6A5ACD" v-if="item.newnessDegree===10">全新</li>
@@ -113,7 +114,7 @@ export default {
 }
 .card{
   width: 350px;
-  height: 270px;
+  height: 300px;
   margin-left: 20px
 }
 .book-title{

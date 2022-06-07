@@ -9,7 +9,9 @@
     <!-- 搜索框 -->
     <div class="search bar">
       <form style="z-index: 1000;">
-        <input v-model="input" type="text" placeholder="请输入您要搜索的内容...">
+        <label>
+          <input v-model="input" type="text" placeholder="请输入您要搜索的内容...">
+        </label>
         <button type="submit" class="fa" @click="search"></button>
       </form>
     </div>
