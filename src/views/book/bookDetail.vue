@@ -82,19 +82,6 @@
             </ul>
           </div>
         </div>
-<!--        <div style="display: flex;margin-top: 10px">-->
-<!--          <img  style="width: 50px;height: 50px" :src="it.userImage" @click="goToUserDetail(it.userId)">-->
-<!--          <div style="margin-left: 10px" @click="goToUserDetail(it.userId)">-->
-<!--&lt;!&ndash;            <div style="font-style:oblique">提供者</div>&ndash;&gt;-->
-<!--&lt;!&ndash;            <div style="margin-top: 10px;font-style:oblique">{{it.userName}}</div>&ndash;&gt;-->
-<!--          </div>-->
-<!--&lt;!&ndash;          <div style="margin-left: 30px;margin-top: 15px" @click="goToCategory(it.goodsCategory)">&ndash;&gt;-->
-<!--&lt;!&ndash;            <div  v-if="it.goodsCategory === 'textbook'" class="arrow-line-1">{{getCategoryName(it.goodsCategory)}}</div>&ndash;&gt;-->
-<!--&lt;!&ndash;            <div  v-if="it.goodsCategory === 'teachingMaterials'" class="arrow-line-2">{{getCategoryName(it.goodsCategory)}}</div>&ndash;&gt;-->
-<!--&lt;!&ndash;            <div  v-if="it.goodsCategory === 'extracurricularBook'" class="arrow-line-3">{{getCategoryName(it.goodsCategory)}}</div>&ndash;&gt;-->
-<!--&lt;!&ndash;            <div  v-if="it.goodsCategory === 'rests'" class="arrow-line-4">{{getCategoryName(it.goodsCategory)}}</div>&ndash;&gt;-->
-<!--&lt;!&ndash;          </div>&ndash;&gt;-->
-<!--        </div>-->
       </el-card>
     </div>
 

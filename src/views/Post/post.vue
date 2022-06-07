@@ -39,7 +39,7 @@
               </div>
               <div>
                 <el-upload list-type="picture-card" action="" :on-preview="handlePreview" :on-remove="handleRemove" :on-change = "handleChange" :before-remove="beforeRemove"
-                           multiple :limit="5" :auto-upload= "false" :file-list="fileList" style="margin-left: -100px" accept=".png,.jpg">
+                           multiple :limit="1" :auto-upload= "false" :file-list="fileList" style="margin-left: -100px" accept=".png,.jpg">
                 <el-button size="small" type="primary">点击上传</el-button>
                 </el-upload>
               </div>
@@ -208,6 +208,7 @@ export default {
       if (fileType === 'jpg' || fileType === 'png') {
         this.fileList.push(file)
       } else {
+        this.fileList = []
         this.$message.error('请上传正确类型的文件')
       }
       console.log(this.fileList.length)
