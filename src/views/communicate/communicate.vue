@@ -81,18 +81,18 @@ export default {
 
     initWebSoket () {
       if ('WebSocket' in window) {
-        this.webSocket = new WebSocket('ws://81.69.225.235:8081/websocket/' + this.$route.params.toUserId + '/' + sessionStorage.getItem('userID'))
+        this.webSocket = new WebSocket('ws://localhost:8081/websocket/' + this.$route.params.toUserId + '/' + sessionStorage.getItem('userID'))
         this.webSocket.onopen = function () {
           console.log('已经连通了websocket')
         }
         this.webSocket.onmessage = async (evt) => {
+          console.log("message")
           var msg = evt.data
           var obj = []
           obj = JSON.parse(msg)
           console.log(obj)
           if (obj[0].type === 0) {
             // 获得历史消息
-            console.log(this.userList)
             for (var i = 1; i < obj.length; i++) {
               this.userList.push(obj[i].user)
               if (obj[i].user.userId == this.toUserID || obj[i].user.userId == this.fromUserID) {
@@ -100,7 +100,6 @@ export default {
                 console.log(this.msgs)
               }
             }
-            console.log(this.userList)
           } else {
             if (obj[1].msg.fromUserId == this.fromUserID && obj[1].msg.toUserId == this.toUserID) {
               this.msgs.push(obj[1].msg)
@@ -138,9 +137,9 @@ export default {
         }
       }
     },
-    send () {
+    async send () {
       var message = this.text
-      this.webSocket.send(message)
+      await this.webSocket.send(message)
       this.text = ''
     },
     jump (id) {

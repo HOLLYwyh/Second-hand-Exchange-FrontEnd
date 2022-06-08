@@ -128,6 +128,8 @@ export default {
           console.log(result)
         })
         this.handleCheckedChange(this.multipleSelection)
+      } else {
+        this.$message.error('已经达到库存上限！')
       }
     },
     async del (delGood) {
@@ -146,6 +148,8 @@ export default {
           console.log(result)
         })
         this.handleCheckedChange(this.multipleSelection)
+      } else {
+        this.$message.error('数量不可为0！')
       }
     },
     handleCheckedChange (selection) {
